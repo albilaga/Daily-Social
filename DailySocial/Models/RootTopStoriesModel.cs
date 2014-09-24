@@ -20,11 +20,4 @@ namespace DailySocial.Models
         public int Pages { get; set; }
         public List<PostModel> Posts { get; set; }
     }
-
-   
-
-    
-
-    
-
 }

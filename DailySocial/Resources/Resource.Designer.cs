@@ -45,7 +45,10 @@ namespace DailySocial
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int Icon = 2130837504;
+			public const int DailySocial = 2130837504;
+			
+			// aapt resource value: 0x7f020001
+			public const int Icon = 2130837505;
 			
 			static Drawable()
 			{
@@ -53,22 +56,6 @@ namespace DailySocial
 			}
 			
 			private Drawable()
-			{
-			}
-		}
-		
-		public partial class Id
-		{
-			
-			// aapt resource value: 0x7f050000
-			public const int MyButton = 2131034112;
-			
-			static Id()
-			{
-				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
-			}
-			
-			private Id()
 			{
 			}
 		}
