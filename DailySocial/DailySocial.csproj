@@ -49,6 +49,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Models\AttachmentModel.cs" />
+    <Compile Include="Models\AuthorModel.cs" />
+    <Compile Include="Models\CategoryModel.cs" />
+    <Compile Include="Models\DetailImageModel.cs" />
+    <Compile Include="Models\ImagesModel.cs" />
+    <Compile Include="Models\RootArticleModel.cs" />
+    <Compile Include="Models\RootCategoriesModel.cs" />
+    <Compile Include="Models\PostModel.cs" />
+    <Compile Include="Models\RootPostsByCategoryModel.cs" />
+    <Compile Include="Models\RootTopStoriesModel.cs" />
+    <Compile Include="Models\TagModel.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -67,6 +78,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utils\" />
+    <Folder Include="ViewModel\" />
+    <Folder Include="View\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
