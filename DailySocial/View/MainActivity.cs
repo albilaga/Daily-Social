@@ -15,9 +15,7 @@ namespace DailySocial
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-
-            ActionBar.NavigationMode = ActionBarNavigationMode.Tabs;
-
+            
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
