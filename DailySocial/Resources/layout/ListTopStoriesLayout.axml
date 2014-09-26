@@ -1,33 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp">
-    <ImageView
-        android:id="@+id/ImagePost"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:padding="5dp"
-        android:src="@drawable/icon"
-        android:layout_alignParentLeft="true" />
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dip">
-        <TextView
-            android:id="@+id/Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FF7F3300"
-            android:textSize="20dip"
-            android:textStyle="italic" />
-        <TextView
-            android:id="@+id/News"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14dip"
-            android:textColor="#FF267F00"
-            android:paddingLeft="100dip" />
-    </LinearLayout>
-</RelativeLayout>
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

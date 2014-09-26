@@ -55,18 +55,15 @@ namespace DailySocial.View.Tabs.Adapter
             var post=_Posts[position];
             //Android.Views.View view;
             Android.Views.View view = convertView;
-            if(view==null)
+            if (view == null)
             {
                 Log.Info("ds", "view null");
-                view = _Context.LayoutInflater.Inflate(Resource.Layout.SingleListTopStoriesLayout, null);
-                //view = _Context.LayoutInflater.Inflate(Resource.Layout.SingleListTopStoriesLayout,null);
+                view = _Context.LayoutInflater.Inflate(Resource.Layout.SingleListTopStoriesLayout, parent,false);
             }
             view.FindViewById<TextView>(Resource.Id.Title).Text = post.Title;
             view.FindViewById<TextView>(Resource.Id.News).Text = post.Excerpt;
             view.FindViewById<ImageView>(Resource.Id.ImagePost).SetImageURI( Android.Net.Uri.Parse(post.Attachments[0].Images.Full.Url));
             return view;
         }
-
-
     }
 }

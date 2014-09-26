@@ -24,7 +24,13 @@ namespace DailySocial.View.Tabs
         private ListView _ListView;
         private TopStoriesViewModel _DataTopStories; 
         private DataService _DataService;
+        private Android.Views.View _MainView;
+        //private Intent _Context;
+        private Context _Context;
         //private 
+
+       
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -32,14 +38,22 @@ namespace DailySocial.View.Tabs
             _DataTopStories = new TopStoriesViewModel();
             _DataService = new DataService();
 
-            SetContentView(Resource.Layout.ListTopStoriesLayout);
-            //_ListView = FindViewById<ListView>(Resource.Id.List);
+            //_Context = Intent.GetIntent("myData");
 
+            SetContentView(Resource.Layout.ListTopStoriesLayout);
+
+            //LayoutInflater inflater = LayoutInflater.From(context);
+            //SetContentView(Resource.Layout.ListTopStoriesLayout);
+
+            //LayoutInflater.From(_Context).Inflate(Resource.Layout.ListTopStoriesLayout, null);
+
+            //_ListView = FindViewById<ListView>(Resource.Id.ListView);
+            //ListAdapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, new string[] { "tes1", "tes2", "tes3" });
+           
             _DataService.GetTopStories();
             _DataService.DownloadCompleted += _DataService_DownloadCompleted;
 
-           
-            
+            ListAdapter = null;
         }
 
         private void CreateList()
@@ -49,7 +63,16 @@ namespace DailySocial.View.Tabs
             //_ListView.Adapter = new TopStoriesAdapter(this, _DataTopStories.Posts);
             //_ListView.ItemClick += _ListView_ItemClick;
             //ListAdapter = new SimpleAdapter(this, _DataTopStories.Posts, Resource.Layout.SingleListTopStoriesLayout, new string[] { "Title", "Excerpt", "Attachments.Images.Full" }, new int[] { Resource.Id.Title, Resource.Id.News, Resource.Id.ImagePost });
-            ListAdapter = new TopStoriesAdapter(this, _DataTopStories.Posts);
+            //ListAdapter = new TopStoriesAdapter(this, _DataTopStories.Posts);
+            //SetContentView(ListAdapter.GetView();
+            //_ListView = FindViewById<ListView>(Resource.Id.ListView);
+            //_ListView.Adapter = new TopStoriesAdapter(this, _DataTopStories.Posts);
+            Log.Info("ds", "set adapter1");
+            ListAdapter = new ArrayAdapter<string>(Application.Context, Android.Resource.Layout.SimpleListItem1, new string[] { "tes1", "tes2", "tes3" });
+
+            Log.Info("ds", "set adapter");
+            //_ListView.ItemClick+=_ListView_ItemClick;
+            //set
             
         }
 

@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using System.Net;
+using Android.Util;
 
 namespace DailySocial.Utils
 {
@@ -32,6 +33,7 @@ namespace DailySocial.Utils
         /// </summary>
         public void GetTopStories()
         {
+            Log.Info("ds", "Get top stories");
             WebClient topStoriesClient = new WebClient();
             topStoriesClient.DownloadStringCompleted += data_DownloadStringCompleted;
             topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl));
@@ -76,6 +78,7 @@ namespace DailySocial.Utils
         /// <param name="e"></param>
         private void data_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
+            Log.Info("ds", "download completed");
             if(DownloadCompleted!=null)
             {
                 var args = new DownloadEventArgs();
