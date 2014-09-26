@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Android.Graphics;
 
 namespace DailySocial.Models
 {
@@ -17,5 +18,6 @@ namespace DailySocial.Models
         public string Url { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public Bitmap Images { get; set; }
     }
 }

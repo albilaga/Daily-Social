@@ -55,6 +55,7 @@
     <Compile Include="Utils\DataService.cs" />
     <Compile Include="Utils\DownloadEventArgs.cs" />
     <Compile Include="Utils\IsoStorage.cs" />
+    <Compile Include="Utils\ListUtils.cs" />
     <Compile Include="ViewModel\ArticleViewModel.cs" />
     <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\TopStoriesViewModel.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="View\Tabs\Adapter\TopStoriesAdapter.cs" />
     <Compile Include="View\Tabs\BookmarkActivity.cs" />
     <Compile Include="View\Tabs\CategoriesActivity.cs" />
+    <Compile Include="View\Tabs\Adapter\CategoriesAdapter.cs" />
     <Compile Include="View\Tabs\TopStoriesActivity.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -84,7 +86,10 @@
     <AndroidResource Include="Resources\layout\SingleListTopStoriesLayout.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\ListTopStoriesLayout.axml">
+    <AndroidResource Include="Resources\layout\ListLayout.axml">
+      <SubType>AndroidResource</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\SingleListCategoryLayout.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
   </ItemGroup>

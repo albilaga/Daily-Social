@@ -18,5 +18,6 @@ namespace DailySocial.Models
         public DetailImageModel Thumbnail { get; set; }
         public DetailImageModel Medium { get; set; }
         public DetailImageModel Large { get; set; }
+
     }
 }

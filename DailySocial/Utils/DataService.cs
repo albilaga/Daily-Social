@@ -36,7 +36,7 @@ namespace DailySocial.Utils
             Log.Info("ds", "Get top stories");
             WebClient topStoriesClient = new WebClient();
             topStoriesClient.DownloadStringCompleted += data_DownloadStringCompleted;
-            topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl));
+            topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl + "&cache=" + GetCacheBuster()));
         }
 
         /// <summary>
@@ -44,9 +44,10 @@ namespace DailySocial.Utils
         /// </summary>
         public void GetCategories()
         {
+            Log.Info("ds", "Get categories");
             WebClient categoriesClient = new WebClient();
             categoriesClient.DownloadStringCompleted += data_DownloadStringCompleted;
-            categoriesClient.DownloadStringAsync(new Uri(_GetCategoriesUrl));
+            categoriesClient.DownloadStringAsync(new Uri(_GetCategoriesUrl + "&cache=" + GetCacheBuster()));
         }
 
         /// <summary>
@@ -92,6 +93,11 @@ namespace DailySocial.Utils
                 }
                 DownloadCompleted(this, args);
             }
+        }
+
+        public string GetCacheBuster()
+        {
+            return Guid.NewGuid().ToString();
         }
         #endregion
     }
