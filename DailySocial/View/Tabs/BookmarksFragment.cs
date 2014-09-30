@@ -9,17 +9,12 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Android.Support.V4.App;
 
 namespace DailySocial.View.Tabs
 {
-    [Activity(Label = "BookmarkActivity")]
-    public class BookmarkActivity : Activity
+    public class BookmarksFragment : Android.Support.V4.App.Fragment
     {
-        protected override void OnCreate(Bundle bundle)
-        {
-            base.OnCreate(bundle);
-
-            // List of bookmarks goes here
-        }
+      
     }
 }

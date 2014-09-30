@@ -26,6 +26,11 @@ namespace DailySocial.Utils
         /// </summary>
         public event EventHandler DownloadCompleted;
 
+        public DataService()
+        {
+            WebRequest.DefaultWebProxy = null;
+        }
+
 
         #region download data
         /// <summary>
@@ -36,7 +41,7 @@ namespace DailySocial.Utils
             Log.Info("ds", "Get top stories");
             WebClient topStoriesClient = new WebClient();
             topStoriesClient.DownloadStringCompleted += data_DownloadStringCompleted;
-            topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl + "&cache=" + GetCacheBuster()));
+            topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl));
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace DailySocial.Utils
             Log.Info("ds", "Get categories");
             WebClient categoriesClient = new WebClient();
             categoriesClient.DownloadStringCompleted += data_DownloadStringCompleted;
-            categoriesClient.DownloadStringAsync(new Uri(_GetCategoriesUrl + "&cache=" + GetCacheBuster()));
+            categoriesClient.DownloadStringAsync(new Uri(_GetCategoriesUrl));
         }
 
         /// <summary>
@@ -79,10 +84,11 @@ namespace DailySocial.Utils
         /// <param name="e"></param>
         private void data_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
-            Log.Info("ds", "download completed");
+            Log.Info("ds", "download completed 1");
             if(DownloadCompleted!=null)
             {
                 var args = new DownloadEventArgs();
+                //Log.Info("ds", e.Result);
                 try
                 {
                     args.ResultDownload = e.Result;

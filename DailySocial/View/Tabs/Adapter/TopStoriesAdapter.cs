@@ -53,8 +53,6 @@ namespace DailySocial.View.Tabs.Adapter
             }
         }
 
-        
-
         public override Android.Views.View GetView(int position, Android.Views.View convertView, ViewGroup parent)
         {
             var post=_Posts[position];
@@ -65,7 +63,7 @@ namespace DailySocial.View.Tabs.Adapter
             }
             view.FindViewById<TextView>(Resource.Id.Title).Text = post.Title;
             view.FindViewById<TextView>(Resource.Id.News).Text = post.Excerpt;
-            view.FindViewById<ImageView>(Resource.Id.ImagePost).SetImageBitmap(post.Attachments[0].Images.Full.Images);
+            view.FindViewById<ImageView>(Resource.Id.ImagePost).SetImageBitmap(post.Attachments[0].Images.Thumbnail.Images);
             return view;
         }
     }

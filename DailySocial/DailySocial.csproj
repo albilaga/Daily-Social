@@ -41,6 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
+    <Reference Include="Mono.Android.Support.v4" />
     <Reference Include="mscorlib" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
@@ -74,10 +75,12 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\Tabs\Adapter\TopStoriesAdapter.cs" />
-    <Compile Include="View\Tabs\BookmarkActivity.cs" />
-    <Compile Include="View\Tabs\CategoriesActivity.cs" />
+    <Compile Include="View\Tabs\BookmarksFragment.cs" />
+    <Compile Include="View\Tabs\CategoriesFragment.cs" />
     <Compile Include="View\Tabs\Adapter\CategoriesAdapter.cs" />
-    <Compile Include="View\Tabs\TopStoriesActivity.cs" />
+    <Compile Include="View\Tabs\GenericFragmentPagerAdapter.cs" />
+    <Compile Include="View\Tabs\GenericViewPagerFragment.cs" />
+    <Compile Include="View\Tabs\TopStoriesFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -90,6 +93,9 @@
       <SubType>AndroidResource</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\SingleListCategoryLayout.axml">
+      <SubType>AndroidResource</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\DetailArticleLayout.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
   </ItemGroup>
