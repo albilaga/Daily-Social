@@ -41,7 +41,7 @@ namespace DailySocial.Utils
             Log.Info("ds", "Get top stories");
             WebClient topStoriesClient = new WebClient();
             topStoriesClient.DownloadStringCompleted += data_DownloadStringCompleted;
-            topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl));
+            topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl+GetCacheBuster()));
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace DailySocial.Utils
             Log.Info("ds", "Get categories");
             WebClient categoriesClient = new WebClient();
             categoriesClient.DownloadStringCompleted += data_DownloadStringCompleted;
-            categoriesClient.DownloadStringAsync(new Uri(_GetCategoriesUrl));
+            categoriesClient.DownloadStringAsync(new Uri(_GetCategoriesUrl+GetCacheBuster()));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace DailySocial.Utils
         {
             WebClient postByCategoryClient = new WebClient();
             postByCategoryClient.DownloadStringCompleted += data_DownloadStringCompleted;
-            postByCategoryClient.DownloadStringAsync(new Uri(_GetListArticleByCategoriesUrl+id));
+            postByCategoryClient.DownloadStringAsync(new Uri(_GetListArticleByCategoriesUrl+id+GetCacheBuster()));
         }
 
         /// <summary>
@@ -84,6 +84,8 @@ namespace DailySocial.Utils
         /// <param name="e"></param>
         private void data_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
+            WebClient wc = sender as WebClient;
+            wc.DownloadStringCompleted -= data_DownloadStringCompleted;
             Log.Info("ds", "download completed 1");
             if(DownloadCompleted!=null)
             {
@@ -97,7 +99,7 @@ namespace DailySocial.Utils
                 {
                     args.ResultDownload = null;
                 }
-                DownloadCompleted(this, args);
+                DownloadCompleted.Invoke(this, args);
             }
         }
 

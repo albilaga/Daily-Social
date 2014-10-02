@@ -19,5 +19,6 @@ namespace DailySocial.Models
         public int Count_Total { get; set; }
         public int Pages { get; set; }
         public List<PostModel> Posts { get; set; }
+        public List<PostModel> PostsByCategory { get; set; }
     }
 }

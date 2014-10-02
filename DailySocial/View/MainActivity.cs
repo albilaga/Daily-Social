@@ -27,17 +27,12 @@ namespace DailySocial
         private TopStoriesFragment _TopStoriesFragment;
         private CategoriesFragment _CategoriesFragment;
 
-        private CategoriesViewModel _DataCategories;// { get; private set; }
-        private TopStoriesViewModel _DataTopStories;// { get; private set; }
-
-        public ViewPager _ViewPager;
+        private ViewPager _ViewPager;
 
         protected override void OnCreate(Bundle bundle)
         {
             Log.Info("ds", "on create main activity");
-            _DataCategories = new CategoriesViewModel();
-            _DataTopStories = new TopStoriesViewModel();
-
+        
             _TopStoriesDownloader = new DataService();
             _CategoriesDownloader = new DataService();
 
@@ -53,6 +48,7 @@ namespace DailySocial
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
+            
             _ViewPager = FindViewById<ViewPager>(Resource.Id.FragmentContainer);
             var adapter = new GenericFragmentPagerAdapter(SupportFragmentManager);
             _TopStoriesFragment = new TopStoriesFragment();
@@ -63,22 +59,32 @@ namespace DailySocial
             _ViewPager.Adapter = adapter;
             _ViewPager.SetOnPageChangeListener(new ViewPageListenerForActionBar(ActionBar));
 
-           
-
-            //Add Tabs
-            //CreateTab("Top Stories",_TopStoriesFragment);
-            //CreateTab("Categories",_CategoriesFragment);
-            //CreateTab("Bookmarks",new BookmarksFragment());
-
             ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Top Stories"));
             ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Categories"));
             ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Bookmarks"));
 
+            if (_TopStoriesFragment._DataTopStories != null && _TopStoriesFragment.IsVisible && _TopStoriesFragment._DataTopStories.TempPosts != null)
+            {
+                RunOnUiThread(() =>
+                    {
+                        _TopStoriesFragment._ProgressBar.Activated = false;
+                        _TopStoriesFragment._ListView.Adapter = new TopStoriesAdapter(this, _TopStoriesFragment._DataTopStories.TempPosts);
+                    });
+            }
+            if (_CategoriesFragment._DataCategories!=null && _CategoriesFragment._DataCategories.TempCategories != null && _CategoriesFragment.IsVisible)
+            {
+                RunOnUiThread(() =>
+                {
+                    _CategoriesFragment._ProgressBar.Activated = false;
+                    _CategoriesFragment._ListView.Adapter = new CategoriesAdapter(this, _CategoriesFragment._DataCategories.TempCategories);
+                });
+            }
             base.OnCreate(bundle);
         }
 
         void _CategoriesDownloader_DownloadCompleted(object sender, EventArgs e)
         {
+            _CategoriesDownloader.DownloadCompleted -= _CategoriesDownloader_DownloadCompleted;
             string raw;
             if (((DownloadEventArgs)e).ResultDownload != null)
             {
@@ -90,6 +96,7 @@ namespace DailySocial
 
         void _TopStoriesDownloader_DownloadCompleted(object sender, EventArgs e)
         {
+            _TopStoriesDownloader.DownloadCompleted -= _TopStoriesDownloader_DownloadCompleted;
             string raw;
             if (((DownloadEventArgs)e).ResultDownload != null)
             {
@@ -100,25 +107,6 @@ namespace DailySocial
                 }
             }
         }
-
-        /// <summary>
-        /// Add Tabs for Main Layout
-        /// </summary>
-        private void CreateTab(string label, Android.Support.V4.App.Fragment fragment)
-        {
-            var tab = ActionBar.NewTab();
-            tab.SetText(label);
-            tab.TabSelected += delegate(object sender, ActionBar.TabEventArgs e)
-            {
-                Log.Info("ds", "tab = " + ActionBar.SelectedNavigationIndex.ToString());
-                _ViewPager.SetCurrentItem(ActionBar.SelectedNavigationIndex, false);
-                //e.FragmentTransaction.Rem
-                //e.FragmentTransaction.Replace(Resource.Id.FragmentContainer, (Android.App.Fragment)fragment);
-            };
-
-            ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar,label));
-        }
-
     }
 }
 

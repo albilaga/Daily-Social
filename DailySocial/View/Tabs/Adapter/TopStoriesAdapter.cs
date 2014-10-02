@@ -63,7 +63,7 @@ namespace DailySocial.View.Tabs.Adapter
             }
             view.FindViewById<TextView>(Resource.Id.Title).Text = post.Title;
             view.FindViewById<TextView>(Resource.Id.News).Text = post.Excerpt;
-            view.FindViewById<ImageView>(Resource.Id.ImagePost).SetImageBitmap(post.Attachments[0].Images.Thumbnail.Images);
+            view.FindViewById<ImageView>(Resource.Id.ImagePost).SetImageBitmap(post.Attachments[0].Images.Full.Images);
             return view;
         }
     }

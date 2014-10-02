@@ -21,16 +21,22 @@ namespace DailySocial.View.Tabs
 {
     public class CategoriesFragment : Android.Support.V4.App.Fragment
     {
-        private ListView _ListView;
-        private ProgressBar _ProgressBar;
-        private bool _IsLoaded = false;
-        private CategoriesViewModel _DataCategories;
+        public ListView _ListView;
+        public ProgressBar _ProgressBar;
+        public bool _IsLoaded = false;
+        public CategoriesViewModel _DataCategories;
 
+        public override void OnAttach(Activity activity)
+        {
+            _DataCategories = new CategoriesViewModel();
+            base.OnAttach(activity);
+        }
         public void UpdateListAdapter(string raw)
         {
             if (raw.Length != 0)
             {
                 _DataCategories = JsonConvert.DeserializeObject<CategoriesViewModel>(raw);
+                _DataCategories.TempCategories = _DataCategories.Categories;
                 Log.Info("ds", "categories downloaded");
                 _IsLoaded = true;
                 if (this.IsVisible)
@@ -71,7 +77,8 @@ namespace DailySocial.View.Tabs
 
         void _ListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            
+            Activity.StartActivity(typeof(ArticlesByCategoryActivity));
+            Activity.Finish(); 
         }
 
     }

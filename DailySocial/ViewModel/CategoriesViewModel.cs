@@ -70,5 +70,21 @@ namespace DailySocial.ViewModel
                 }
             }
         }
+
+        public List<CategoryModel> TempCategories
+        {
+            get
+            {
+                return _Model.Categories;
+            }
+            set
+            {
+                if (value != _Model.Categories)
+                {
+                    _Model.Categories = value;
+                    NotifyPropertyChanged("TempCategories");
+                }
+            }
+        }
     }
 }

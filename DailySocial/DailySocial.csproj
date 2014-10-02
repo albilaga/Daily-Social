@@ -60,6 +60,7 @@
     <Compile Include="ViewModel\ArticleViewModel.cs" />
     <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\TopStoriesViewModel.cs" />
+    <Compile Include="View\ArticlesByCategoryActivity.cs" />
     <Compile Include="View\MainActivity.cs" />
     <Compile Include="Models\AttachmentModel.cs" />
     <Compile Include="Models\AuthorModel.cs" />

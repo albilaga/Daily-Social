@@ -69,5 +69,21 @@ namespace DailySocial.ViewModel
                 }
             }
         }
+
+        public List<PostModel> TempPosts
+        {
+            get
+            {
+                return _Model.Posts;
+            }
+            set
+            {
+                if(value!=_Model.Posts)
+                {
+                    _Model.Posts = value;
+                    NotifyPropertyChanged("TempPosts");
+                }
+            }
+        }
     }
 }
