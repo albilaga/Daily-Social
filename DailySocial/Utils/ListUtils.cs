@@ -1,16 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.Graphics;
+using System;
 using System.Net;
+using System.Reflection;
 
 namespace DailySocial.Utils
 {
@@ -25,13 +16,24 @@ namespace DailySocial.Utils
         {
             Bitmap imageBitmap = null;
 
-            using (var webClient = new WebClient())
+            try
             {
-                var imageBytes = webClient.DownloadData(url);
-                if (imageBytes != null && imageBytes.Length > 0)
+                using (var webClient = new WebClient())
                 {
-                    imageBitmap = BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
+                    var imageBytes = webClient.DownloadData(url);
+                    if (imageBytes != null && imageBytes.Length > 0)
+                    {
+                        imageBitmap = BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MethodBase currentMethod = MethodInfo.GetCurrentMethod();
+                Console.WriteLine(String.Format("CLASS : {0}; METHOD : {1}; EXCEPTION : {2}"
+                    , currentMethod.DeclaringType.FullName
+                    , currentMethod.Name
+                    , ex.Message));
             }
 
             return imageBitmap;

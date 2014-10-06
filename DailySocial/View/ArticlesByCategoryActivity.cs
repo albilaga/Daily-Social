@@ -1,19 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
+using Android.Util;
 using Android.Widget;
 using DailySocial.Utils;
+using DailySocial.View.Tabs.Adapter;
 using DailySocial.ViewModel;
 using Newtonsoft.Json;
-using Android.Util;
-using DailySocial.View.Tabs.Adapter;
+using System;
 using System.Threading.Tasks;
 
 namespace DailySocial.View
@@ -39,9 +33,9 @@ namespace DailySocial.View
             {
                 _DataArticlesByCategory = null;
             }
-            
+
             _DataArticlesByCategory = new TopStoriesViewModel();
-            
+
             if (_DataArticlesByCategory.Posts != null)
             {
                 _DataArticlesByCategory.Posts.Clear();
@@ -50,7 +44,7 @@ namespace DailySocial.View
             string idx = Intent.GetStringExtra("IdFromCategories");
             int id = Int16.Parse(idx);
             Log.Info("ds", "id on articles = " + id);
-            if(_ArticlesByCategoryDownloader!=null)
+            if (_ArticlesByCategoryDownloader != null)
             {
                 _ArticlesByCategoryDownloader = null;
             }
@@ -63,17 +57,24 @@ namespace DailySocial.View
         {
             //this.StartActivity(typeof(MainActivity));
             this.Finish();
+            foreach(var x in _DataArticlesByCategory.Posts)
+            {
+                if(x.Attachments[0].Images.Full.Images!=null)
+                {
+                    x.Attachments[0].Images.Full.Images.Recycle();
+                    x.Attachments[0].Images.Full.Images.Dispose();
+                }
+            }
             base.OnBackPressed();
         }
 
-
-        void _ArticlesByCategoryDownloader_DownloadCompleted(object sender, EventArgs e)
+        private void _ArticlesByCategoryDownloader_DownloadCompleted(object sender, EventArgs e)
         {
             _ArticlesByCategoryDownloader.DownloadCompleted -= _ArticlesByCategoryDownloader_DownloadCompleted;
             if (((DownloadEventArgs)e).ResultDownload != null)
             {
                 string raw = ((DownloadEventArgs)e).ResultDownload;
-                if (raw.Length != 0 && raw!=null)
+                if (raw.Length != 0 && raw != null)
                 {
                     Task.Factory.StartNew(() =>
                         {
@@ -85,7 +86,7 @@ namespace DailySocial.View
                                 //Log.Info
                                 if (x.Attachments.Count > 0)
                                 {
-                                    x.Attachments[0].Images.Full.Images = ListUtils.GetImageBitmapFromUrl(x.Attachments[0].Images.Full.Url);
+                                    x.Attachments[0].Images.Full.Images = ListUtils.GetImageBitmapFromUrl(x.Attachments[0].Images.Medium.Url);
                                 }
                                 index++;
                             }
@@ -94,14 +95,17 @@ namespace DailySocial.View
                             Log.Info("ds", "fragment articles by categories visible");
                         }).ContinueWith(todo =>
                             {
-                                if (_IsLoaded)
+                                if (todo.Status == TaskStatus.RanToCompletion)
                                 {
-                                    RunOnUiThread(() =>
+                                    if (_IsLoaded)
                                     {
-                                        _ListView.Adapter = new TopStoriesAdapter(this, _DataArticlesByCategory.Posts);
-                                        _ProgressBar.Activated = false;
-                                    });
-                                    Log.Info("ds", "top stories downloaded");
+                                        RunOnUiThread(() =>
+                                        {
+                                            _ListView.Adapter = new TopStoriesAdapter(this, _DataArticlesByCategory.Posts);
+                                            _ProgressBar.Activated = false;
+                                        });
+                                        Log.Info("ds", "top stories downloaded");
+                                    }
                                 }
                             });
                 }

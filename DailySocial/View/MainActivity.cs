@@ -1,25 +1,17 @@
-﻿using System;
-using Android.App;
-using Android.Content;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+﻿using Android.App;
 using Android.OS;
-using DailySocial.View.Tabs;
-using Android.Util;
-using DailySocial.ViewModel;
-using DailySocial.Utils;
-using Newtonsoft.Json;
-using DailySocial.View.Tabs.Adapter;
-using DailySocial.Models;
-using System.Collections.Generic;
-using Android.Support.V4.View;
 using Android.Support.V4.App;
+using Android.Support.V4.View;
+using Android.Util;
+using Android.Views;
+using DailySocial.Utils;
+using DailySocial.View.Tabs;
+using System;
 
 namespace DailySocial
 {
     [Activity(Label = "DailySocial", MainLauncher = true, Icon = "@drawable/icon")]
-    public class MainActivity :FragmentActivity,ViewPager.IOnPageChangeListener
+    public class MainActivity : FragmentActivity, ViewPager.IOnPageChangeListener
     {
         private DataService _TopStoriesDownloader;
         private DataService _CategoriesDownloader;
@@ -27,19 +19,12 @@ namespace DailySocial
         private TopStoriesFragment _TopStoriesFragment;
         private CategoriesFragment _CategoriesFragment;
 
-        public event EventHandler DownloadCancelled;
-
-
         private ViewPager _ViewPager;
 
         protected override void OnCreate(Bundle bundle)
         {
-            Log.Info("ds", "on create main activity");
-        
             _TopStoriesDownloader = new DataService();
             _CategoriesDownloader = new DataService();
-
-            //TopStoriesFragment fragmentTopStories=getloca
 
             _TopStoriesDownloader.GetTopStories();
             _TopStoriesDownloader.DownloadCompleted += _TopStoriesDownloader_DownloadCompleted;
@@ -51,8 +36,11 @@ namespace DailySocial
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
-            
+
+            //Get UI Control
             _ViewPager = FindViewById<ViewPager>(Resource.Id.FragmentContainer);
+
+            //add fragment to view pager
             var adapter = new GenericFragmentPagerAdapter(SupportFragmentManager);
             _TopStoriesFragment = new TopStoriesFragment();
             _CategoriesFragment = new CategoriesFragment();
@@ -66,26 +54,26 @@ namespace DailySocial
             ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Categories"));
             ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Bookmarks"));
 
-            if (_TopStoriesFragment._DataTopStories != null && _TopStoriesFragment.IsVisible && _TopStoriesFragment._DataTopStories.TempPosts != null)
+            //show list to UI
+            if (_TopStoriesFragment.DataTopStories != null && _TopStoriesFragment.IsVisible && _TopStoriesFragment.DataTopStories.TempPosts != null)
             {
-                RunOnUiThread(() =>
-                    {
-                        _TopStoriesFragment._ProgressBar.Activated = false;
-                        _TopStoriesFragment._ListView.Adapter = new TopStoriesAdapter(this, _TopStoriesFragment._DataTopStories.TempPosts);
-                    });
+                _TopStoriesFragment.ShowList();
             }
-            if (_CategoriesFragment._DataCategories!=null && _CategoriesFragment._DataCategories.TempCategories != null && _CategoriesFragment.IsVisible)
+            if (_CategoriesFragment.DataCategories != null && _CategoriesFragment.DataCategories.TempCategories != null && _CategoriesFragment.IsVisible)
             {
-                RunOnUiThread(() =>
-                {
-                    _CategoriesFragment._ProgressBar.Activated = false;
-                    _CategoriesFragment._ListView.Adapter = new CategoriesAdapter(this, _CategoriesFragment._DataCategories.TempCategories);
-                });
+                _CategoriesFragment.ShowList();
             }
             base.OnCreate(bundle);
         }
 
-        void _CategoriesDownloader_DownloadCompleted(object sender, EventArgs e)
+        public override void OnLowMemory()
+        {
+            Log.Info("ds", "Low memory");
+            _TopStoriesFragment.RecycleImage();
+            base.OnLowMemory();
+        }
+
+        private void _CategoriesDownloader_DownloadCompleted(object sender, EventArgs e)
         {
             _CategoriesDownloader.DownloadCompleted -= _CategoriesDownloader_DownloadCompleted;
             string raw;
@@ -97,7 +85,7 @@ namespace DailySocial
             }
         }
 
-        void _TopStoriesDownloader_DownloadCompleted(object sender, EventArgs e)
+        private void _TopStoriesDownloader_DownloadCompleted(object sender, EventArgs e)
         {
             _TopStoriesDownloader.DownloadCompleted -= _TopStoriesDownloader_DownloadCompleted;
             string raw;
@@ -111,36 +99,25 @@ namespace DailySocial
             }
         }
 
-        protected override void OnDestroy()
-        {
-            
-            base.OnDestroy();
-        }
-
-
         public void OnPageScrollStateChanged(int state)
         {
-            //throw new NotImplementedException();
         }
 
         public void OnPageScrolled(int position, float positionOffset, int positionOffsetPixels)
         {
-            //throw new NotImplementedException();
         }
 
         public void OnPageSelected(int position)
         {
             ActionBar.SetSelectedNavigationItem(position);
-            Log.Info("ds", "tab index On Page Selected = " + ActionBar.SelectedNavigationIndex);
-            if(ActionBar.SelectedNavigationIndex==0)
+            if (ActionBar.SelectedNavigationIndex == 0)
             {
                 _TopStoriesFragment.ShowList();
             }
-            else if(ActionBar.SelectedNavigationIndex==1)
+            else if (ActionBar.SelectedNavigationIndex == 1)
             {
                 _CategoriesFragment.ShowList();
             }
         }
     }
 }
-
