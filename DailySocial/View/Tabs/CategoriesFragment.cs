@@ -26,11 +26,6 @@ namespace DailySocial.View.Tabs
         public bool _IsLoaded = false;
         public CategoriesViewModel _DataCategories;
 
-        public override void OnAttach(Activity activity)
-        {
-            _DataCategories = new CategoriesViewModel();
-            base.OnAttach(activity);
-        }
         public void UpdateListAdapter(string raw)
         {
             if (raw.Length != 0)
@@ -39,7 +34,7 @@ namespace DailySocial.View.Tabs
                 _DataCategories.TempCategories = _DataCategories.Categories;
                 Log.Info("ds", "categories downloaded");
                 _IsLoaded = true;
-                if (this.IsVisible)
+                if (this.Activity.ActionBar.SelectedNavigationIndex == 1)
                 {
                     Log.Info("ds", "Categories fragment visible");
                     if (_IsLoaded)
@@ -54,31 +49,35 @@ namespace DailySocial.View.Tabs
             }
         }
 
+        public void ShowList()
+        {
+            Log.Info("ds", "Categories fragment visible");
+            if (_IsLoaded)
+                Activity.RunOnUiThread(() =>
+                {
+                    _ProgressBar.Activated = false;
+                    _ListView.Adapter = new CategoriesAdapter(Activity, _DataCategories.Categories);
+                });
+        }
+
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
+            Log.Info("ds", "action bar di categorus = " + this.Activity.ActionBar.SelectedNavigationIndex);
             Log.Info("ds", "on categories");
             var view = inflater.Inflate(Resource.Layout.ListLayout, container, false);
             _ListView = view.FindViewById<ListView>(Resource.Id.ListView);
             _ListView.ItemClick += _ListView_ItemClick;
             _ProgressBar = view.FindViewById<ProgressBar>(Resource.Id.ProgressBar);
-            if (this.IsVisible)
-            {
-                Log.Info("ds", "Categories fragment visible");
-                if (_IsLoaded)
-                    Activity.RunOnUiThread(() =>
-                        {
-                            _ProgressBar.Activated = false;
-                            _ListView.Adapter = new CategoriesAdapter(Activity, _DataCategories.Categories);
-                        });
-            }
             base.OnCreateView(inflater, container, savedInstanceState);
             return view;
         }
 
         void _ListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            Activity.StartActivity(typeof(ArticlesByCategoryActivity));
-            Activity.Finish(); 
+            Intent intent = new Intent(Activity.BaseContext, typeof(ArticlesByCategoryActivity));
+            Log.Info("ds", "Click id = " + e.Id);
+            intent.PutExtra("IdFromCategories", e.Id.ToString());
+            Activity.StartActivity(intent);
         }
 
     }

@@ -41,7 +41,7 @@ namespace DailySocial.Utils
             Log.Info("ds", "Get top stories");
             WebClient topStoriesClient = new WebClient();
             topStoriesClient.DownloadStringCompleted += data_DownloadStringCompleted;
-            topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl+GetCacheBuster()));
+            topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl));
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace DailySocial.Utils
             Log.Info("ds", "Get categories");
             WebClient categoriesClient = new WebClient();
             categoriesClient.DownloadStringCompleted += data_DownloadStringCompleted;
-            categoriesClient.DownloadStringAsync(new Uri(_GetCategoriesUrl+GetCacheBuster()));
+            categoriesClient.DownloadStringAsync(new Uri(_GetCategoriesUrl));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace DailySocial.Utils
         {
             WebClient postByCategoryClient = new WebClient();
             postByCategoryClient.DownloadStringCompleted += data_DownloadStringCompleted;
-            postByCategoryClient.DownloadStringAsync(new Uri(_GetListArticleByCategoriesUrl+id+GetCacheBuster()));
+            postByCategoryClient.DownloadStringAsync(new Uri(_GetListArticleByCategoriesUrl + id));
         }
 
         /// <summary>
@@ -85,17 +85,18 @@ namespace DailySocial.Utils
         private void data_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
             WebClient wc = sender as WebClient;
-            wc.DownloadStringCompleted -= data_DownloadStringCompleted;
             Log.Info("ds", "download completed 1");
-            if(DownloadCompleted!=null)
+            wc.DownloadStringCompleted -= data_DownloadStringCompleted;
+            wc.Dispose();
+            if (DownloadCompleted != null)
             {
                 var args = new DownloadEventArgs();
-                //Log.Info("ds", e.Result);
                 try
                 {
                     args.ResultDownload = e.Result;
+                    Log.Info("ds", e.Result);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     args.ResultDownload = null;
                 }
@@ -103,10 +104,14 @@ namespace DailySocial.Utils
             }
         }
 
+
         public string GetCacheBuster()
         {
-            return Guid.NewGuid().ToString();
+            StringBuilder sb = new StringBuilder("&cache=");
+            sb.Append(Guid.NewGuid().ToString());
+            return sb.ToString();
         }
+
         #endregion
     }
 }

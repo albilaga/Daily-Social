@@ -50,7 +50,7 @@ namespace DailySocial.View.Tabs
         public override void OnPageSelected(int position)
         {
             _bar.SetSelectedNavigationItem(position);
-        }
+                    }
     }
     public static class ViewPagerExtensions
     {

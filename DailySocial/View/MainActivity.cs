@@ -19,13 +19,16 @@ using Android.Support.V4.App;
 namespace DailySocial
 {
     [Activity(Label = "DailySocial", MainLauncher = true, Icon = "@drawable/icon")]
-    public class MainActivity :FragmentActivity
+    public class MainActivity :FragmentActivity,ViewPager.IOnPageChangeListener
     {
         private DataService _TopStoriesDownloader;
         private DataService _CategoriesDownloader;
 
         private TopStoriesFragment _TopStoriesFragment;
         private CategoriesFragment _CategoriesFragment;
+
+        public event EventHandler DownloadCancelled;
+
 
         private ViewPager _ViewPager;
 
@@ -57,7 +60,7 @@ namespace DailySocial
             adapter.AddFragment(_CategoriesFragment);
             adapter.AddFragment(new BookmarksFragment());
             _ViewPager.Adapter = adapter;
-            _ViewPager.SetOnPageChangeListener(new ViewPageListenerForActionBar(ActionBar));
+            _ViewPager.SetOnPageChangeListener(this);
 
             ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Top Stories"));
             ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Categories"));
@@ -105,6 +108,37 @@ namespace DailySocial
                 {
                     _TopStoriesFragment.UpdateListAdapter(raw);
                 }
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            
+            base.OnDestroy();
+        }
+
+
+        public void OnPageScrollStateChanged(int state)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnPageSelected(int position)
+        {
+            ActionBar.SetSelectedNavigationItem(position);
+            Log.Info("ds", "tab index On Page Selected = " + ActionBar.SelectedNavigationIndex);
+            if(ActionBar.SelectedNavigationIndex==0)
+            {
+                _TopStoriesFragment.ShowList();
+            }
+            else if(ActionBar.SelectedNavigationIndex==1)
+            {
+                _CategoriesFragment.ShowList();
             }
         }
     }

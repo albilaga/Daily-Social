@@ -70,17 +70,18 @@ namespace DailySocial.ViewModel
             }
         }
 
+        private List<PostModel> _TempPosts;
         public List<PostModel> TempPosts
         {
             get
             {
-                return _Model.Posts;
+                return _TempPosts;
             }
             set
             {
-                if(value!=_Model.Posts)
+                if(value!=_TempPosts)
                 {
-                    _Model.Posts = value;
+                    _TempPosts = value;
                     NotifyPropertyChanged("TempPosts");
                 }
             }

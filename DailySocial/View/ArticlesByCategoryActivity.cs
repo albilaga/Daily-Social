@@ -14,6 +14,7 @@ using DailySocial.ViewModel;
 using Newtonsoft.Json;
 using Android.Util;
 using DailySocial.View.Tabs.Adapter;
+using System.Threading.Tasks;
 
 namespace DailySocial.View
 {
@@ -33,13 +34,26 @@ namespace DailySocial.View
             // Create your application here
             SetContentView(Resource.Layout.ListLayout);
             _ListView = FindViewById<ListView>(Resource.Id.ListView);
-
-            if(_DataArticlesByCategory==null)
+            _ProgressBar = FindViewById<ProgressBar>(Resource.Id.ProgressBar);
+            if (_DataArticlesByCategory != null)
             {
-                _DataArticlesByCategory = new TopStoriesViewModel();
+                _DataArticlesByCategory = null;
             }
-
-            int id = 9;
+            
+            _DataArticlesByCategory = new TopStoriesViewModel();
+            
+            if (_DataArticlesByCategory.Posts != null)
+            {
+                _DataArticlesByCategory.Posts.Clear();
+                _DataArticlesByCategory.Posts = null;
+            }
+            string idx = Intent.GetStringExtra("IdFromCategories");
+            int id = Int16.Parse(idx);
+            Log.Info("ds", "id on articles = " + id);
+            if(_ArticlesByCategoryDownloader!=null)
+            {
+                _ArticlesByCategoryDownloader = null;
+            }
             _ArticlesByCategoryDownloader = new DataService();
             _ArticlesByCategoryDownloader.GetArticlesByCategory(id);
             _ArticlesByCategoryDownloader.DownloadCompleted += _ArticlesByCategoryDownloader_DownloadCompleted;
@@ -47,7 +61,7 @@ namespace DailySocial.View
 
         public override void OnBackPressed()
         {
-            this.StartActivity(typeof(MainActivity));
+            //this.StartActivity(typeof(MainActivity));
             this.Finish();
             base.OnBackPressed();
         }
@@ -61,30 +75,35 @@ namespace DailySocial.View
                 string raw = ((DownloadEventArgs)e).ResultDownload;
                 if (raw.Length != 0 && raw!=null)
                 {
-                    _DataArticlesByCategory = JsonConvert.DeserializeObject<TopStoriesViewModel>(raw);
-                    int index = 0;
-                    foreach (var x in _DataArticlesByCategory.Posts)
-                    {
-                        if (!this.IsFinishing)
+                    Task.Factory.StartNew(() =>
                         {
-                            Log.Info("ds", "index = " + index);
-                            //Log.Info
-                            x.Attachments[0].Images.Full.Images = ListUtils.GetImageBitmapFromUrl(x.Attachments[0].Images.Full.Url);
-                            index++;
-                        }
-                    }
-                    Log.Info("ds", "bitmap downloaded");
-                    _IsLoaded = true;
-                    Log.Info("ds", "fragment top stories visible");
-                    if (_IsLoaded)
-                    {
-                        RunOnUiThread(() =>
-                        {
-                            _ListView.Adapter = new TopStoriesAdapter(this, _DataArticlesByCategory.Posts);
-                            _ProgressBar.Activated = false;
-                        });
-                        Log.Info("ds", "top stories downloaded");
-                    }
+                            _DataArticlesByCategory = JsonConvert.DeserializeObject<TopStoriesViewModel>(raw);
+                            int index = 0;
+                            foreach (var x in _DataArticlesByCategory.Posts)
+                            {
+                                Log.Info("ds", "index = " + index);
+                                //Log.Info
+                                if (x.Attachments.Count > 0)
+                                {
+                                    x.Attachments[0].Images.Full.Images = ListUtils.GetImageBitmapFromUrl(x.Attachments[0].Images.Full.Url);
+                                }
+                                index++;
+                            }
+                            Log.Info("ds", "bitmap downloaded");
+                            _IsLoaded = true;
+                            Log.Info("ds", "fragment articles by categories visible");
+                        }).ContinueWith(todo =>
+                            {
+                                if (_IsLoaded)
+                                {
+                                    RunOnUiThread(() =>
+                                    {
+                                        _ListView.Adapter = new TopStoriesAdapter(this, _DataArticlesByCategory.Posts);
+                                        _ProgressBar.Activated = false;
+                                    });
+                                    Log.Info("ds", "top stories downloaded");
+                                }
+                            });
                 }
             }
         }
