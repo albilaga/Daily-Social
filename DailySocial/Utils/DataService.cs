@@ -1,16 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System.Net;
 using Android.Util;
+
+using System;
+using System.Net;
+using System.Text;
 
 namespace DailySocial.Utils
 {
@@ -31,8 +23,8 @@ namespace DailySocial.Utils
             WebRequest.DefaultWebProxy = null;
         }
 
-
         #region download data
+
         /// <summary>
         /// Get json data for top stories from web
         /// </summary>
@@ -40,7 +32,8 @@ namespace DailySocial.Utils
         {
             Log.Info("ds", "Get top stories");
             WebClient topStoriesClient = new WebClient();
-            topStoriesClient.DownloadStringCompleted += data_DownloadStringCompleted;
+            topStoriesClient.Encoding = Encoding.UTF8;
+            topStoriesClient.DownloadStringCompleted += OnDownloadStringCompleted;
             topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl));
         }
 
@@ -51,7 +44,8 @@ namespace DailySocial.Utils
         {
             Log.Info("ds", "Get categories");
             WebClient categoriesClient = new WebClient();
-            categoriesClient.DownloadStringCompleted += data_DownloadStringCompleted;
+            categoriesClient.Encoding = Encoding.UTF8;
+            categoriesClient.DownloadStringCompleted += OnDownloadStringCompleted;
             categoriesClient.DownloadStringAsync(new Uri(_GetCategoriesUrl));
         }
 
@@ -62,7 +56,8 @@ namespace DailySocial.Utils
         public void GetArticlesByCategory(int id)
         {
             WebClient postByCategoryClient = new WebClient();
-            postByCategoryClient.DownloadStringCompleted += data_DownloadStringCompleted;
+            postByCategoryClient.Encoding = Encoding.UTF8;
+            postByCategoryClient.DownloadStringCompleted += OnDownloadStringCompleted;
             postByCategoryClient.DownloadStringAsync(new Uri(_GetListArticleByCategoriesUrl + id));
         }
 
@@ -73,7 +68,8 @@ namespace DailySocial.Utils
         public void GetDetailArticle(int id)
         {
             WebClient detailArticleClient = new WebClient();
-            detailArticleClient.DownloadStringCompleted += data_DownloadStringCompleted;
+            detailArticleClient.Encoding = Encoding.UTF8;
+            detailArticleClient.DownloadStringCompleted += OnDownloadStringCompleted;
             detailArticleClient.DownloadStringAsync(new Uri(_GetDetailArticleUrl + id));
         }
 
@@ -82,11 +78,11 @@ namespace DailySocial.Utils
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void data_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        private void OnDownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
             WebClient wc = sender as WebClient;
             Log.Info("ds", "download completed 1");
-            wc.DownloadStringCompleted -= data_DownloadStringCompleted;
+            wc.DownloadStringCompleted -= OnDownloadStringCompleted;
             wc.Dispose();
             if (DownloadCompleted != null)
             {
@@ -104,7 +100,6 @@ namespace DailySocial.Utils
             }
         }
 
-
         public string GetCacheBuster()
         {
             StringBuilder sb = new StringBuilder("&cache=");
@@ -112,6 +107,6 @@ namespace DailySocial.Utils
             return sb.ToString();
         }
 
-        #endregion
+        #endregion download data
     }
 }

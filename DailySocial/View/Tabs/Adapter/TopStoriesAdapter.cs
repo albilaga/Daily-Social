@@ -1,27 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using DailySocial.Models;
 
 using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using DailySocial.Models;
-using Android.Util;
-using Android.Graphics;
-using System.Net;
-using DailySocial.Utils;
+
+using System.Collections.Generic;
 
 namespace DailySocial.View.Tabs.Adapter
 {
-    class TopStoriesAdapter : BaseAdapter<PostModel>
+    internal class TopStoriesAdapter : BaseAdapter<PostModel>
     {
         private List<PostModel> _Posts;
         private Activity _Context;
-        public TopStoriesAdapter(Activity context,List<PostModel> posts) : base()
+
+        public TopStoriesAdapter(Activity context, List<PostModel> posts)
+            : base()
         {
             this._Context = context;
             this._Posts = posts;
@@ -39,27 +32,27 @@ namespace DailySocial.View.Tabs.Adapter
 
         public override PostModel this[int position]
         {
-            get 
+            get
             {
-                return _Posts[position]; 
+                return _Posts[position];
             }
         }
 
         public override int Count
         {
-            get 
+            get
             {
-                return _Posts.Count; 
+                return _Posts.Count;
             }
         }
 
         public override Android.Views.View GetView(int position, Android.Views.View convertView, ViewGroup parent)
         {
-            var post=_Posts[position];
+            var post = _Posts[position];
             Android.Views.View view = convertView;
             if (view == null)
             {
-                view = _Context.LayoutInflater.Inflate(Resource.Layout.SingleListTopStoriesLayout, parent,false);
+                view = _Context.LayoutInflater.Inflate(Resource.Layout.SingleListTopStoriesLayout, parent, false);
             }
             view.FindViewById<TextView>(Resource.Id.Title).Text = post.Title;
             view.FindViewById<TextView>(Resource.Id.News).Text = post.Excerpt;
@@ -67,7 +60,7 @@ namespace DailySocial.View.Tabs.Adapter
             {
                 view.FindViewById<ImageView>(Resource.Id.ImagePost).SetImageBitmap(post.Attachments[0].Images.Full.Images);
             }
-            else if(post.Attachments.Count==0)
+            else if (post.Attachments.Count == 0)
             {
                 view.FindViewById<ImageView>(Resource.Id.ImagePost).Visibility = ViewStates.Invisible;
             }

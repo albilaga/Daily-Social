@@ -1,18 +1,20 @@
+using Newtonsoft.Json;
+using DailySocial.Utils;
+using DailySocial.View.Tabs.Adapter;
+using DailySocial.ViewModel;
+
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Util;
 using Android.Widget;
-using DailySocial.Utils;
-using DailySocial.View.Tabs.Adapter;
-using DailySocial.ViewModel;
-using Newtonsoft.Json;
+
 using System;
 using System.Threading.Tasks;
 
 namespace DailySocial.View
 {
-    [Activity(Label = "ArticlesByCategory")]
+    [Activity]
     public class ArticlesByCategoryActivity : Activity
     {
         private ListView _ListView;
@@ -25,46 +27,60 @@ namespace DailySocial.View
         {
             base.OnCreate(bundle);
 
-            // Create your application here
+            string title = Intent.GetStringExtra("TitleFromCategories");
+            this.Title = title;
+
+            //UI Layout
             SetContentView(Resource.Layout.ListLayout);
             _ListView = FindViewById<ListView>(Resource.Id.ListView);
             _ProgressBar = FindViewById<ProgressBar>(Resource.Id.ProgressBar);
-            if (_DataArticlesByCategory != null)
-            {
-                _DataArticlesByCategory = null;
-            }
+
+            _ListView.ItemClick += OnItemClick;
 
             _DataArticlesByCategory = new TopStoriesViewModel();
 
-            if (_DataArticlesByCategory.Posts != null)
-            {
-                _DataArticlesByCategory.Posts.Clear();
-                _DataArticlesByCategory.Posts = null;
-            }
+            //get id from categories
             string idx = Intent.GetStringExtra("IdFromCategories");
-            int id = Int16.Parse(idx);
+            int id = int.Parse(idx);
             Log.Info("ds", "id on articles = " + id);
-            if (_ArticlesByCategoryDownloader != null)
-            {
-                _ArticlesByCategoryDownloader = null;
-            }
+
             _ArticlesByCategoryDownloader = new DataService();
             _ArticlesByCategoryDownloader.GetArticlesByCategory(id);
             _ArticlesByCategoryDownloader.DownloadCompleted += _ArticlesByCategoryDownloader_DownloadCompleted;
         }
 
+        private void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
+        {
+            Intent intent = new Intent(BaseContext, typeof(DetailArticleActivity));
+            intent.PutExtra("IdForDetail", e.Id.ToString());
+            StartActivity(intent);
+            System.GC.Collect();
+            System.GC.WaitForPendingFinalizers();
+        }
+
+        /// <summary>
+        /// override method when back key pressed and dispose and recycle all data used in this activity
+        /// </summary>
         public override void OnBackPressed()
         {
-            //this.StartActivity(typeof(MainActivity));
-            this.Finish();
-            foreach(var x in _DataArticlesByCategory.Posts)
+            if (_DataArticlesByCategory.Posts != null)
             {
-                if(x.Attachments[0].Images.Full.Images!=null)
+                foreach (var x in _DataArticlesByCategory.Posts)
                 {
-                    x.Attachments[0].Images.Full.Images.Recycle();
-                    x.Attachments[0].Images.Full.Images.Dispose();
+                    if (x.Attachments[0].Images.Full.Images != null)
+                    {
+                        x.Attachments[0].Images.Full.Images.Recycle();
+                        x.Attachments[0].Images.Full.Images.Dispose();
+                    }
                 }
             }
+            _ArticlesByCategoryDownloader = null;
+            _DataArticlesByCategory.Posts.Clear();
+            _DataArticlesByCategory.Posts = null;
+            _DataArticlesByCategory = null;
+            System.GC.Collect();
+            System.GC.WaitForPendingFinalizers();
+            this.Finish();
             base.OnBackPressed();
         }
 

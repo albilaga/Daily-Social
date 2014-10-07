@@ -1,16 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System.IO.IsolatedStorage;
 using System.IO;
+using System.IO.IsolatedStorage;
 using System.Runtime.Serialization;
 
 namespace DailySocial.Utils
@@ -28,7 +17,6 @@ namespace DailySocial.Utils
                 }
             }
         }
-
 
         public static void Save(Stream imageStream, string fileName)
         {
@@ -68,7 +56,6 @@ namespace DailySocial.Utils
         {
             using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
             {
-
                 if (iso.FileExists(fileName))
                 {
                     var stream = iso.OpenFile(fileName, FileMode.Open, FileAccess.Read);
@@ -79,7 +66,6 @@ namespace DailySocial.Utils
                     return null;
                 }
             }
-
         }
 
         public static bool Delete(string fileName)

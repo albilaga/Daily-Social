@@ -1,11 +1,12 @@
+using Newtonsoft.Json;
+using DailySocial.View.Tabs.Adapter;
+using DailySocial.ViewModel;
+
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using DailySocial.View.Tabs.Adapter;
-using DailySocial.ViewModel;
-using Newtonsoft.Json;
 
 namespace DailySocial.View.Tabs
 {
@@ -23,7 +24,6 @@ namespace DailySocial.View.Tabs
         public void UpdateListAdapter(string raw)
         {
             DataCategories = JsonConvert.DeserializeObject<CategoriesViewModel>(raw);
-            DataCategories.TempCategories = DataCategories.Categories;
             IsLoadedOnCategories = true;
             if (this.Activity.ActionBar.SelectedNavigationIndex == 1)
             {
@@ -70,6 +70,7 @@ namespace DailySocial.View.Tabs
         {
             Intent intent = new Intent(Activity.BaseContext, typeof(ArticlesByCategoryActivity));
             intent.PutExtra("IdFromCategories", e.Id.ToString());
+            intent.PutExtra("TitleFromCategories", DataCategories.Categories[e.Position].Title);
             Activity.StartActivity(intent);
             System.GC.Collect();
             System.GC.WaitForPendingFinalizers();

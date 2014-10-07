@@ -1,16 +1,7 @@
+using DailySocial.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using System.ComponentModel;
-using DailySocial.Models;
 
 namespace DailySocial.ViewModel
 {
@@ -29,15 +20,14 @@ namespace DailySocial.ViewModel
             }
         }
 
-        #endregion
+        #endregion INotifyPropertyChanged implementation
 
         private RootCategoriesModel _Model;
 
-        public CategoriesViewModel(RootCategoriesModel model=null)
+        public CategoriesViewModel(RootCategoriesModel model = null)
         {
             this._Model = model ?? new RootCategoriesModel();
         }
-
 
         public string Status
         {
@@ -47,7 +37,7 @@ namespace DailySocial.ViewModel
             }
             set
             {
-                if(value!=_Model.Status)
+                if (value != _Model.Status)
                 {
                     _Model.Status = value;
                     NotifyPropertyChanged("Status");
@@ -63,26 +53,10 @@ namespace DailySocial.ViewModel
             }
             set
             {
-                if(value!=_Model.Categories)
-                {
-                    _Model.Categories = value;
-                    NotifyPropertyChanged("Categories");
-                }
-            }
-        }
-
-        public List<CategoryModel> TempCategories
-        {
-            get
-            {
-                return _Model.Categories;
-            }
-            set
-            {
                 if (value != _Model.Categories)
                 {
                     _Model.Categories = value;
-                    NotifyPropertyChanged("TempCategories");
+                    NotifyPropertyChanged("Categories");
                 }
             }
         }

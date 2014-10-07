@@ -1,17 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Util;
+using Android.Views;
+
+using System;
+using System.Collections.Generic;
 
 namespace DailySocial.View.Tabs
 {
@@ -19,7 +14,11 @@ namespace DailySocial.View.Tabs
     {
         private List<Android.Support.V4.App.Fragment> _FragmentList = new List<Android.Support.V4.App.Fragment>();
 
-        public GenericFragmentPagerAdapter(Android.Support.V4.App.FragmentManager fm) : base(fm) { }
+        public GenericFragmentPagerAdapter(Android.Support.V4.App.FragmentManager fm)
+            : base(fm)
+        {
+        }
+
         public override int Count
         {
             get { return _FragmentList.Count; }
@@ -40,18 +39,7 @@ namespace DailySocial.View.Tabs
             _FragmentList.Add(new GenericViewPagerFragment(view));
         }
     }
-    public class ViewPageListenerForActionBar : ViewPager.SimpleOnPageChangeListener
-    {
-        private ActionBar _bar;
-        public ViewPageListenerForActionBar(ActionBar bar)
-        {
-            _bar = bar;
-        }
-        public override void OnPageSelected(int position)
-        {
-            _bar.SetSelectedNavigationItem(position);
-                    }
-    }
+
     public static class ViewPagerExtensions
     {
         public static ActionBar.Tab GetViewPageTab(this ViewPager viewPager, ActionBar actionBar, string name)
@@ -66,5 +54,4 @@ namespace DailySocial.View.Tabs
             return tab;
         }
     }
-
 }

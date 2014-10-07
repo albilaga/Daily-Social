@@ -1,18 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
-using Android.Widget;
+
+using System;
 
 namespace DailySocial.View.Tabs
 {
-    public class GenericViewPagerFragment: Android.Support.V4.App.Fragment   
+    public class GenericViewPagerFragment : Android.Support.V4.App.Fragment
     {
         private Func<LayoutInflater, ViewGroup, Bundle, Android.Views.View> _view;
 

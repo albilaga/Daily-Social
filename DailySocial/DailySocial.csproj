@@ -41,7 +41,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
-    <Reference Include="Mono.Android.Support.v4" />
     <Reference Include="mscorlib" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
@@ -51,6 +50,12 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
+    <Reference Include="Xamarin.Android.Support.v4">
+      <HintPath>..\..\..\..\..\..\Downloads\Compressed\xamandroidsupportv7appcompat-20.0.0.1\lib\android\Xamarin.Android.Support.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.AppCompat">
+      <HintPath>..\..\..\..\..\..\Downloads\Compressed\xamandroidsupportv7appcompat-20.0.0.1\lib\android\Xamarin.Android.Support.v7.AppCompat.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Utils\DataService.cs" />
@@ -61,6 +66,7 @@
     <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\TopStoriesViewModel.cs" />
     <Compile Include="View\ArticlesByCategoryActivity.cs" />
+    <Compile Include="View\DetailArticleActivity.cs" />
     <Compile Include="View\MainActivity.cs" />
     <Compile Include="Models\AttachmentModel.cs" />
     <Compile Include="Models\AuthorModel.cs" />
@@ -112,6 +118,9 @@
   <ItemGroup>
     <Content Include="Properties\AndroidManifest.xml" />
     <AndroidResource Include="Resources\drawable\DailySocial.png" />
+    <AndroidResource Include="Resources\menu\menu.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

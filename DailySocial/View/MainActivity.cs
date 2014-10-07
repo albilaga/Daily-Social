@@ -1,16 +1,17 @@
-﻿using Android.App;
+﻿using DailySocial.Utils;
+using DailySocial.View.Tabs;
+
+using Android.App;
 using Android.OS;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Util;
 using Android.Views;
-using DailySocial.Utils;
-using DailySocial.View.Tabs;
 using System;
 
 namespace DailySocial
 {
-    [Activity(Label = "DailySocial", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "Daily Social", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : FragmentActivity, ViewPager.IOnPageChangeListener
     {
         private DataService _TopStoriesDownloader;
@@ -55,15 +56,28 @@ namespace DailySocial
             ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Bookmarks"));
 
             //show list to UI
-            if (_TopStoriesFragment.DataTopStories != null && _TopStoriesFragment.IsVisible && _TopStoriesFragment.DataTopStories.TempPosts != null)
+            base.OnCreate(bundle);
+        }
+
+        protected override void OnResume()
+        {
+            if (_TopStoriesFragment.DataTopStories != null && _TopStoriesFragment.IsVisible)
             {
                 _TopStoriesFragment.ShowList();
             }
-            if (_CategoriesFragment.DataCategories != null && _CategoriesFragment.DataCategories.TempCategories != null && _CategoriesFragment.IsVisible)
+            else
+            {
+                _TopStoriesDownloader.GetTopStories();
+            }
+            if (_CategoriesFragment.DataCategories != null && _CategoriesFragment.IsVisible)
             {
                 _CategoriesFragment.ShowList();
             }
-            base.OnCreate(bundle);
+            else
+            {
+                _CategoriesDownloader.GetCategories();
+            }
+            base.OnResume();
         }
 
         public override void OnLowMemory()

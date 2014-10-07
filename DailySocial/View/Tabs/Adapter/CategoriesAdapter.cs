@@ -1,31 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using DailySocial.Models;
 
 using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using DailySocial.Models;
-using DailySocial.Utils;
-using System.Net;
+
+using System.Collections.Generic;
 
 namespace DailySocial.View.Tabs.Adapter
 {
-    class CategoriesAdapter : BaseAdapter<CategoryModel>
+    internal class CategoriesAdapter : BaseAdapter<CategoryModel>
     {
         private List<CategoryModel> _Category;
         private Activity _Context;
+
         public CategoriesAdapter(Activity context, List<CategoryModel> category)
             : base()
         {
             this._Context = context;
-            this._Category=category;
+            this._Category = category;
         }
-
 
         /// <summary>
         /// Get Item ID
@@ -53,7 +46,6 @@ namespace DailySocial.View.Tabs.Adapter
             }
         }
 
-     
         public override Android.Views.View GetView(int position, Android.Views.View convertView, ViewGroup parent)
         {
             var post = _Category[position];
