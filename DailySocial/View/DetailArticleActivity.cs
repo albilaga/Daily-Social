@@ -13,10 +13,12 @@ using Android.Widget;
 using System;
 using Android.Webkit;
 using System.Web;
+using System.Linq;
+using DailySocial.View.Tabs;
 
 namespace DailySocial.View
 {
-    [Activity(Label = "Detail Article", Theme = "@style/Theme.AppCompat")]
+    [Activity(Label = "Detail Article", Theme = "@style/Theme.AppCompat.Light")]
     public class DetailArticleActivity : ActionBarActivity
     {
         private ImageView _ImageTitleHolder;
@@ -26,6 +28,8 @@ namespace DailySocial.View
         private ArticleViewModel _DataArticle;
         private Android.Support.V7.Widget.ShareActionProvider _ShareAction;
         private WebView _WebView;
+        private BookmarksViewModel _Bookmarks;
+        private int _BookmarksId;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -36,11 +40,14 @@ namespace DailySocial.View
             _ImageTitleHolder = FindViewById<ImageView>(Resource.Id.ImageTitleHolder);
             _ContentTextView = FindViewById<TextView>(Resource.Id.ContentTextView);
             _Progressbar = FindViewById<ProgressBar>(Resource.Id.ProgressBarOnDetail);
+            _Bookmarks = ListUtils.LoadBookmarks();
             //_WebView = FindViewById<WebView>(Resource.Id.WebView);
             //_WebView.Visibility = ViewStates.Invisible;
             //_WebView.Settings.JavaScriptEnabled = false;
             //_WebView.Settings.LoadWithOverviewMode = true;
             //_WebView.Settings.UseWideViewPort = true;
+
+            
             
             string ids = Intent.GetStringExtra("IdForDetail");
             int id = int.Parse(ids);
@@ -65,9 +72,26 @@ namespace DailySocial.View
             {
                 menu.FindItem(Resource.Id.ActionShare).SetEnabled(true);
                 menu.FindItem(Resource.Id.Bookmarks).SetVisible(true);
-                if (_DataArticle.Post.IsFavorite)
+                if(_Bookmarks!=null)
                 {
-                    menu.FindItem(Resource.Id.Bookmarks).SetIcon(Resources.GetDrawable(Resource.Drawable.ic_action_rating_important));
+                    foreach(var x in _Bookmarks.Bookmarks)
+                    {
+                        if(_DataArticle.Post.Id==x.Id)
+                        {
+                            _DataArticle.Post.IsFavorite = true;
+                            _BookmarksId = x.Id;
+                            break;
+                        }
+                    }
+                    if(_DataArticle.Post.IsFavorite)
+                    {
+                        menu.FindItem(Resource.Id.Bookmarks).SetIcon(Resources.GetDrawable(Resource.Drawable.ic_action_rating_important));
+                    }
+                    else
+                    {
+                        menu.FindItem(Resource.Id.Bookmarks).SetIcon(Resources.GetDrawable(Resource.Drawable.ic_action_rating_not_important));
+                    }
+                    
                 }
                 else
                 {
@@ -91,13 +115,28 @@ namespace DailySocial.View
             {
                 case Resource.Id.Bookmarks:
                     {
-                        Toast.MakeText(this.BaseContext, "tes bookmark", ToastLength.Long);
-                        _DataArticle.Post.IsFavorite = true;
-                        BookmarksViewModel bookmarks = new BookmarksViewModel();
-                        _DataArticle.Post.Attachments[0].Images.Full.Images.Recycle();
-                        _DataArticle.Post.Attachments[0].Images.Full.Images.Dispose();
-                        _DataArticle.Post.Attachments[0].Images.Full.Images = null;
-                        ListUtils.SaveBookmarks(_DataArticle.Post);
+                        Toast.MakeText(this.BaseContext, "test bookmark", ToastLength.Long);
+                        if (!_DataArticle.Post.IsFavorite)
+                        {
+                            _DataArticle.Post.Attachments[0].Images.Full.Images.Recycle();
+                            _DataArticle.Post.Attachments[0].Images.Full.Images.Dispose();
+                            _DataArticle.Post.Attachments[0].Images.Full.Images = null;
+                            ListUtils.SaveBookmarks(_DataArticle.Post);
+                            item.SetIcon(Resources.GetDrawable(Resource.Drawable.ic_action_rating_important));
+                        }
+                        else
+                        {
+                            var get = _Bookmarks.Bookmarks.Where(w => w.Id == _BookmarksId).FirstOrDefault();
+                            if (get == null)
+                            {
+
+                            }
+                            else
+                            {
+                                _Bookmarks.Bookmarks.Remove(get);
+                            }
+                            item.SetIcon(Resources.GetDrawable(Resource.Drawable.ic_action_rating_not_important));
+                        }
                         break;
                     }
                 default:
@@ -118,6 +157,8 @@ namespace DailySocial.View
             _DataArticle = null;
             System.GC.Collect();
             System.GC.WaitForPendingFinalizers();
+            BookmarksFragment bookmarksFragment = new BookmarksFragment();
+            bookmarksFragment.Bookmarks = ListUtils.LoadBookmarks();
             this.Finish();
             base.OnBackPressed();
         }

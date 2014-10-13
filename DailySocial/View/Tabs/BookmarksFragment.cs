@@ -24,21 +24,24 @@ namespace DailySocial.View.Tabs
 
         public void ShowList()
         {
-            Activity.RunOnUiThread(() =>
+            if (Activity.ActionBar.SelectedNavigationIndex == 2)
             {
-                if (Bookmarks == null || Bookmarks.Bookmarks.Count == 0)
+                Activity.RunOnUiThread(() =>
                 {
-                    TextViewOnBookmarks.Text = "No Data To Display";
-                    ListViewOnBookmarks.Visibility = ViewStates.Gone;
-                    ProgressBarOnBookmarks.Visibility = ViewStates.Gone;
-                }
-                else
-                {
-                    ListViewOnBookmarks.Adapter = new TopStoriesAdapter(Activity, Bookmarks.Bookmarks);
-                    ProgressBarOnBookmarks.Activated = false;
-                    TextViewOnBookmarks.Visibility = ViewStates.Gone;
-                }
-            });
+                    if (Bookmarks == null || Bookmarks.Bookmarks.Count == 0)
+                    {
+                        TextViewOnBookmarks.Text = "No Data To Display";
+                        ListViewOnBookmarks.Visibility = ViewStates.Gone;
+                        ProgressBarOnBookmarks.Visibility = ViewStates.Gone;
+                    }
+                    else
+                    {
+                        ListViewOnBookmarks.Adapter = new TopStoriesAdapter(Activity, Bookmarks.Bookmarks);
+                        ProgressBarOnBookmarks.Visibility = ViewStates.Gone;
+                        TextViewOnBookmarks.Visibility = ViewStates.Gone;
+                    }
+                });
+            }
         }
 
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

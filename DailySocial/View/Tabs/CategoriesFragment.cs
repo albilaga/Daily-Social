@@ -8,6 +8,7 @@ using DailySocial.Utils;
 using DailySocial.View.Tabs.Adapter;
 using DailySocial.ViewModel;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace DailySocial.View.Tabs
 {
@@ -24,7 +25,7 @@ namespace DailySocial.View.Tabs
             if (DataCategories != null)
             {
                 IsLoadedOnCategories = true;
-                UpdateListAdapter("");
+                Task.Factory.StartNew(() => UpdateListAdapter(""));
             }
             base.OnActivityCreated(savedInstanceState);
         }
@@ -41,17 +42,7 @@ namespace DailySocial.View.Tabs
                 DataCategories = JsonConvert.DeserializeObject<CategoriesViewModel>(raw);
                 IsLoadedOnCategories = true;
             }
-            if (this.Activity.ActionBar.SelectedNavigationIndex == 1)
-            {
-                if (IsLoadedOnCategories)
-                {
-                    Activity.RunOnUiThread(() =>
-                    {
-                        ListViewOnCategories.Adapter = new CategoriesAdapter(Activity, DataCategories.Categories);
-                        ProgressBarOnCategories.Activated = false;
-                    });
-                }
-            }
+            ShowList();
         }
 
         /// <summary>
@@ -59,12 +50,17 @@ namespace DailySocial.View.Tabs
         /// </summary>
         public void ShowList()
         {
-            if (IsLoadedOnCategories)
-                Activity.RunOnUiThread(() =>
+            if (this.Activity.ActionBar.SelectedNavigationIndex == 1)
+            {
+                if (IsLoadedOnCategories)
                 {
-                    ProgressBarOnCategories.Activated = false;
-                    ListViewOnCategories.Adapter = new CategoriesAdapter(Activity, DataCategories.Categories);
-                });
+                    Activity.RunOnUiThread(() =>
+                    {
+                        ProgressBarOnCategories.Activated = false;
+                        ListViewOnCategories.Adapter = new CategoriesAdapter(Activity, DataCategories.Categories);
+                    });
+                }
+            }
         }
 
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

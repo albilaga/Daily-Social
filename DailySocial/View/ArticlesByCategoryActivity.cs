@@ -1,21 +1,19 @@
-using Newtonsoft.Json;
-using DailySocial.Utils;
-using DailySocial.View.Tabs.Adapter;
-using DailySocial.ViewModel;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Util;
 using Android.Widget;
-
+using DailySocial.Utils;
+using DailySocial.View.Tabs.Adapter;
+using DailySocial.ViewModel;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using System.Web;
 
 namespace DailySocial.View
 {
-    [Activity]
+    [Activity(Theme = "@style/Theme.AppCompat.Light")]
     public class ArticlesByCategoryActivity : Activity
     {
         private ListView _ListView;
@@ -76,9 +74,15 @@ namespace DailySocial.View
                 }
             }
             _ArticlesByCategoryDownloader = null;
-            _DataArticlesByCategory.Posts.Clear();
-            _DataArticlesByCategory.Posts = null;
-            _DataArticlesByCategory = null;
+            if (_DataArticlesByCategory.Posts != null)
+            {
+                _DataArticlesByCategory.Posts.Clear();
+                _DataArticlesByCategory.Posts = null;
+            }
+            if (_DataArticlesByCategory != null)
+            {
+                _DataArticlesByCategory = null;
+            }
             System.GC.Collect();
             System.GC.WaitForPendingFinalizers();
             this.Finish();

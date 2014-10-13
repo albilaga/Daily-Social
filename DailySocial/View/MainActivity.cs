@@ -7,10 +7,11 @@ using Android.Views;
 using DailySocial.Utils;
 using DailySocial.View.Tabs;
 using System;
+using System.Threading.Tasks;
 
 namespace DailySocial
 {
-    [Activity(Label = "Daily Social", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "Daily Social", MainLauncher = true, Icon = "@drawable/icon", Theme = "@style/Theme.AppCompat.Light")]
     public class MainActivity : FragmentActivity, ViewPager.IOnPageChangeListener
     {
         private DataService _TopStoriesDownloader;
@@ -97,7 +98,7 @@ namespace DailySocial
                 raw = ((DownloadEventArgs)e).ResultDownload;
                 if (raw != null || raw.Length != 0)
                 {
-                    _CategoriesFragment.UpdateListAdapter(raw);
+                    Task.Factory.StartNew(() => _CategoriesFragment.UpdateListAdapter(raw));
                     ListUtils.SaveCategories(raw);
                 }
             }
@@ -112,7 +113,7 @@ namespace DailySocial
                 raw = ((DownloadEventArgs)e).ResultDownload;
                 if (raw != null || raw.Length != 0)
                 {
-                    _TopStoriesFragment.UpdateListAdapter(raw);
+                    Task.Factory.StartNew(() => _TopStoriesFragment.UpdateListAdapter(raw));
                     ListUtils.SaveTopStories(raw);
                 }
             }
