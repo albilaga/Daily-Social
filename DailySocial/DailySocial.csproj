@@ -48,6 +48,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
     <Reference Include="Xamarin.Android.Support.v4">
@@ -63,6 +64,7 @@
     <Compile Include="Utils\IsoStorage.cs" />
     <Compile Include="Utils\ListUtils.cs" />
     <Compile Include="ViewModel\ArticleViewModel.cs" />
+    <Compile Include="ViewModel\BookmarksViewModel.cs" />
     <Compile Include="ViewModel\CategoriesViewModel.cs" />
     <Compile Include="ViewModel\TopStoriesViewModel.cs" />
     <Compile Include="View\ArticlesByCategoryActivity.cs" />
@@ -121,6 +123,14 @@
     <AndroidResource Include="Resources\menu\menu.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_action_rating_important.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_action_rating_not_important.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_action_rating_important.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_action_rating_not_important.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_action_rating_important.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_action_rating_not_important.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_action_rating_important.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_action_rating_not_important.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

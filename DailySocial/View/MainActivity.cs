@@ -1,12 +1,11 @@
-﻿using DailySocial.Utils;
-using DailySocial.View.Tabs;
-
-using Android.App;
+﻿using Android.App;
 using Android.OS;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Util;
 using Android.Views;
+using DailySocial.Utils;
+using DailySocial.View.Tabs;
 using System;
 
 namespace DailySocial
@@ -19,6 +18,7 @@ namespace DailySocial
 
         private TopStoriesFragment _TopStoriesFragment;
         private CategoriesFragment _CategoriesFragment;
+        private BookmarksFragment _BookmarksFragment;
 
         private ViewPager _ViewPager;
 
@@ -45,9 +45,10 @@ namespace DailySocial
             var adapter = new GenericFragmentPagerAdapter(SupportFragmentManager);
             _TopStoriesFragment = new TopStoriesFragment();
             _CategoriesFragment = new CategoriesFragment();
+            _BookmarksFragment = new BookmarksFragment();
             adapter.AddFragment(_TopStoriesFragment);
             adapter.AddFragment(_CategoriesFragment);
-            adapter.AddFragment(new BookmarksFragment());
+            adapter.AddFragment(_BookmarksFragment);
             _ViewPager.Adapter = adapter;
             _ViewPager.SetOnPageChangeListener(this);
 
@@ -95,7 +96,10 @@ namespace DailySocial
             {
                 raw = ((DownloadEventArgs)e).ResultDownload;
                 if (raw != null || raw.Length != 0)
+                {
                     _CategoriesFragment.UpdateListAdapter(raw);
+                    ListUtils.SaveCategories(raw);
+                }
             }
         }
 
@@ -109,6 +113,7 @@ namespace DailySocial
                 if (raw != null || raw.Length != 0)
                 {
                     _TopStoriesFragment.UpdateListAdapter(raw);
+                    ListUtils.SaveTopStories(raw);
                 }
             }
         }
@@ -131,6 +136,10 @@ namespace DailySocial
             else if (ActionBar.SelectedNavigationIndex == 1)
             {
                 _CategoriesFragment.ShowList();
+            }
+            else if (ActionBar.SelectedNavigationIndex == 2)
+            {
+                _BookmarksFragment.ShowList();
             }
         }
     }

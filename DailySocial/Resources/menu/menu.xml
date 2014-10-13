@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto" >
+      xmlns:app="http://schemas.android.com/apk/res-auto">
   <item android:id="@+id/ActionShare"
           android:title="@string/Share"
           app:showAsAction="always"
-          app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
-          />
+          app:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
+  <item android:id="@+id/Bookmarks"
+        app:showAsAction="always" />
 </menu>

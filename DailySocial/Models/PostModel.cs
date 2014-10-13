@@ -32,5 +32,6 @@ namespace DailySocial.Models
         public List<AttachmentModel> Attachments { get; set; }
         public int Comment_Count { get; set; }
         public string Comment_Status { get; set; }
+        public bool IsFavorite { get; set; }
     }
 }

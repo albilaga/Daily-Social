@@ -12,6 +12,7 @@ using Android.Views;
 using Android.Widget;
 using System;
 using Android.Webkit;
+using System.Web;
 
 namespace DailySocial.View
 {
@@ -32,14 +33,14 @@ namespace DailySocial.View
 
             // Create your application here
             SetContentView(Resource.Layout.DetailArticleLayout);
-            //_ImageTitleHolder = FindViewById<ImageView>(Resource.Id.ImageTitleHolder);
-            //_ContentTextView = FindViewById<TextView>(Resource.Id.ContentTextView);
+            _ImageTitleHolder = FindViewById<ImageView>(Resource.Id.ImageTitleHolder);
+            _ContentTextView = FindViewById<TextView>(Resource.Id.ContentTextView);
             _Progressbar = FindViewById<ProgressBar>(Resource.Id.ProgressBarOnDetail);
-            _WebView = FindViewById<WebView>(Resource.Id.WebView);
-            _WebView.Activated = false;
-            _WebView.Settings.JavaScriptEnabled = false;
-            _WebView.Settings.LoadWithOverviewMode = true;
-            _WebView.Settings.UseWideViewPort = true;
+            //_WebView = FindViewById<WebView>(Resource.Id.WebView);
+            //_WebView.Visibility = ViewStates.Invisible;
+            //_WebView.Settings.JavaScriptEnabled = false;
+            //_WebView.Settings.LoadWithOverviewMode = true;
+            //_WebView.Settings.UseWideViewPort = true;
             
             string ids = Intent.GetStringExtra("IdForDetail");
             int id = int.Parse(ids);
@@ -58,10 +59,20 @@ namespace DailySocial.View
             if (_DataArticle.Post == null)
             {
                 menu.FindItem(Resource.Id.ActionShare).SetEnabled(false);
+                menu.FindItem(Resource.Id.Bookmarks).SetVisible(false);
             }
             else
             {
                 menu.FindItem(Resource.Id.ActionShare).SetEnabled(true);
+                menu.FindItem(Resource.Id.Bookmarks).SetVisible(true);
+                if (_DataArticle.Post.IsFavorite)
+                {
+                    menu.FindItem(Resource.Id.Bookmarks).SetIcon(Resources.GetDrawable(Resource.Drawable.ic_action_rating_important));
+                }
+                else
+                {
+                    menu.FindItem(Resource.Id.Bookmarks).SetIcon(Resources.GetDrawable(Resource.Drawable.ic_action_rating_not_important));
+                }
                 var shareItem = menu.FindItem(Resource.Id.ActionShare);
                 var shareItemAction = MenuItemCompat.GetActionProvider(shareItem);
                 _ShareAction = shareItemAction.JavaCast<Android.Support.V7.Widget.ShareActionProvider>();
@@ -74,10 +85,36 @@ namespace DailySocial.View
             return base.OnCreateOptionsMenu(menu);
         }
 
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch(item.ItemId)
+            {
+                case Resource.Id.Bookmarks:
+                    {
+                        Toast.MakeText(this.BaseContext, "tes bookmark", ToastLength.Long);
+                        _DataArticle.Post.IsFavorite = true;
+                        BookmarksViewModel bookmarks = new BookmarksViewModel();
+                        _DataArticle.Post.Attachments[0].Images.Full.Images.Recycle();
+                        _DataArticle.Post.Attachments[0].Images.Full.Images.Dispose();
+                        _DataArticle.Post.Attachments[0].Images.Full.Images = null;
+                        ListUtils.SaveBookmarks(_DataArticle.Post);
+                        break;
+                    }
+                default:
+                    break;
+            }
+
+            base.OnOptionsItemSelected(item);
+            return true;
+        }
+
         public override void OnBackPressed()
         {
-            _DataArticle.Post.Attachments[0].Images.Full.Images.Recycle();
-            _DataArticle.Post.Attachments[0].Images.Full.Images.Dispose();
+            if (_DataArticle.Post.Attachments[0].Images.Full.Images != null)
+            {
+                _DataArticle.Post.Attachments[0].Images.Full.Images.Recycle();
+                _DataArticle.Post.Attachments[0].Images.Full.Images.Dispose();
+            }
             _DataArticle = null;
             System.GC.Collect();
             System.GC.WaitForPendingFinalizers();
@@ -92,6 +129,8 @@ namespace DailySocial.View
             {
                 var raw = ((DailySocial.Utils.DownloadEventArgs)e).ResultDownload;
                 _DataArticle = JsonConvert.DeserializeObject<ArticleViewModel>(raw);
+                _DataArticle.Post.Title = HttpUtility.HtmlDecode(_DataArticle.Post.Title);
+                _DataArticle.Post.Content = HttpUtility.HtmlDecode(_DataArticle.Post.Content);
                 if (_DataArticle.Post.Attachments.Count > 0)
                 {
                     _DataArticle.Post.Attachments[0].Images.Full.Images = ListUtils.GetImageBitmapFromUrl(_DataArticle.Post.Attachments[0].Images.Full.Url);
@@ -101,10 +140,10 @@ namespace DailySocial.View
                         InvalidateOptionsMenu();
                         _Progressbar.Activated = false;
                         _Progressbar.Visibility = ViewStates.Gone;
-                        //_ImageTitleHolder.SetImageBitmap(_DataArticle.Post.Attachments[0].Images.Full.Images);
-                        //_ContentTextView.Text = _DataArticle.Post.Content.Trim();
-                        _WebView.LoadDataWithBaseURL("", _DataArticle.Post.Content, "text/html", "UTF-8", "");
-                        _WebView.Activated = true;
+                        _ImageTitleHolder.SetImageBitmap(_DataArticle.Post.Attachments[0].Images.Full.Images);
+                        _ContentTextView.Text = _DataArticle.Post.Content.Trim();
+                        //_WebView.LoadDataWithBaseURL("", _DataArticle.Post.Content, "text/html", "UTF-8", "");
+                        //_WebView.Activated = true;
                     });
             }
         }

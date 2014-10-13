@@ -802,7 +802,13 @@ namespace DailySocial
 			public const int DailySocial = 2130837591;
 			
 			// aapt resource value: 0x7f020058
-			public const int Icon = 2130837592;
+			public const int ic_action_rating_important = 2130837592;
+			
+			// aapt resource value: 0x7f020059
+			public const int ic_action_rating_not_important = 2130837593;
+			
+			// aapt resource value: 0x7f02005a
+			public const int Icon = 2130837594;
 			
 			static Drawable()
 			{
@@ -817,35 +823,44 @@ namespace DailySocial
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050046
-			public const int ActionShare = 2131034182;
+			// aapt resource value: 0x7f050048
+			public const int ActionShare = 2131034184;
 			
-			// aapt resource value: 0x7f050041
-			public const int FragmentContainer = 2131034177;
-			
-			// aapt resource value: 0x7f050043
-			public const int ImagePost = 2131034179;
+			// aapt resource value: 0x7f050049
+			public const int Bookmarks = 2131034185;
 			
 			// aapt resource value: 0x7f05003f
-			public const int ListView = 2131034175;
+			public const int ContentTextView = 2131034175;
 			
-			// aapt resource value: 0x7f050042
-			public const int NameCategory = 2131034178;
+			// aapt resource value: 0x7f050043
+			public const int FragmentContainer = 2131034179;
 			
 			// aapt resource value: 0x7f050045
-			public const int News = 2131034181;
+			public const int ImagePost = 2131034181;
+			
+			// aapt resource value: 0x7f05003e
+			public const int ImageTitleHolder = 2131034174;
 			
 			// aapt resource value: 0x7f050040
-			public const int ProgressBar = 2131034176;
+			public const int ListView = 2131034176;
+			
+			// aapt resource value: 0x7f050044
+			public const int NameCategory = 2131034180;
+			
+			// aapt resource value: 0x7f050047
+			public const int News = 2131034183;
+			
+			// aapt resource value: 0x7f050042
+			public const int ProgressBar = 2131034178;
 			
 			// aapt resource value: 0x7f05003d
 			public const int ProgressBarOnDetail = 2131034173;
 			
-			// aapt resource value: 0x7f050044
-			public const int Title = 2131034180;
+			// aapt resource value: 0x7f050041
+			public const int TextView = 2131034177;
 			
-			// aapt resource value: 0x7f05003e
-			public const int WebView = 2131034174;
+			// aapt resource value: 0x7f050046
+			public const int Title = 2131034182;
 			
 			// aapt resource value: 0x7f05001c
 			public const int action_bar = 2131034140;

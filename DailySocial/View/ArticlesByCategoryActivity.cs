@@ -11,6 +11,7 @@ using Android.Widget;
 
 using System;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace DailySocial.View
 {
@@ -98,6 +99,7 @@ namespace DailySocial.View
                             int index = 0;
                             foreach (var x in _DataArticlesByCategory.Posts)
                             {
+                                x.Title = HttpUtility.HtmlDecode(x.Title);
                                 Log.Info("ds", "index = " + index);
                                 //Log.Info
                                 if (x.Attachments.Count > 0)

@@ -1,12 +1,13 @@
-using Newtonsoft.Json;
-using DailySocial.View.Tabs.Adapter;
-using DailySocial.ViewModel;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
+using DailySocial.Utils;
+using DailySocial.View.Tabs.Adapter;
+using DailySocial.ViewModel;
+using Newtonsoft.Json;
 
 namespace DailySocial.View.Tabs
 {
@@ -17,14 +18,29 @@ namespace DailySocial.View.Tabs
         public bool IsLoadedOnCategories = false;
         public CategoriesViewModel DataCategories;
 
+        public override void OnActivityCreated(Bundle savedInstanceState)
+        {
+            DataCategories = ListUtils.LoadCategories();
+            if (DataCategories != null)
+            {
+                IsLoadedOnCategories = true;
+                UpdateListAdapter("");
+            }
+            base.OnActivityCreated(savedInstanceState);
+        }
+
         /// <summary>
         /// Processing data from web to view model and update it to view
         /// </summary>
         /// <param name="raw">data raw from web</param>
         public void UpdateListAdapter(string raw)
         {
-            DataCategories = JsonConvert.DeserializeObject<CategoriesViewModel>(raw);
-            IsLoadedOnCategories = true;
+            if (!IsLoadedOnCategories || raw != "")
+            {
+                Log.Info("ds", "Load categories from web");
+                DataCategories = JsonConvert.DeserializeObject<CategoriesViewModel>(raw);
+                IsLoadedOnCategories = true;
+            }
             if (this.Activity.ActionBar.SelectedNavigationIndex == 1)
             {
                 if (IsLoadedOnCategories)
@@ -57,6 +73,7 @@ namespace DailySocial.View.Tabs
             ListViewOnCategories = view.FindViewById<ListView>(Resource.Id.ListView);
             ListViewOnCategories.ItemClick += OnListItemClick;
             ProgressBarOnCategories = view.FindViewById<ProgressBar>(Resource.Id.ProgressBar);
+            view.FindViewById<TextView>(Resource.Id.TextView).Visibility = ViewStates.Gone;
             base.OnCreateView(inflater, container, savedInstanceState);
             return view;
         }

@@ -1,8 +1,14 @@
+using DailySocial.Models;
+using DailySocial.ViewModel;
+using Newtonsoft.Json;
+
 using Android.Graphics;
 
 using System;
 using System.Net;
 using System.Reflection;
+using System.IO;
+using System.Collections.Generic;
 
 namespace DailySocial.Utils
 {
@@ -39,5 +45,72 @@ namespace DailySocial.Utils
 
             return imageBitmap;
         }
+
+        //public static string BitmapToBase64(Bitmap image)
+        //{
+        //    //Bitmap imagex = image;
+        //    //Stream stream = new MemoryStream();
+        //    //imagex.
+
+        //}
+
+        #region Save Cache and Bookmarks
+        private const string FILENAME_BOOKMARKS_JSON = "bookmarks.json";
+        private const string FILENAME_TOPSTORIES_JSON = "topstories.json";
+        private const string FILENAME_CATEGORIES_JSON = "categories.json";
+        
+        public static void SaveBookmarks(PostModel post)
+        {
+            BookmarksViewModel bookmarks = ListUtils.LoadBookmarks();
+            if(bookmarks==null)
+            {
+                bookmarks = new BookmarksViewModel();
+            }
+            bookmarks.Bookmarks.Add(post);
+            var json = JsonConvert.SerializeObject(bookmarks);
+            IsoStorage.Save<string>(FILENAME_BOOKMARKS_JSON, json);
+        }
+
+        public static BookmarksViewModel LoadBookmarks()
+        {
+            var raw = IsoStorage.Load<string>(FILENAME_BOOKMARKS_JSON);
+            if (raw != null)
+            {
+                return JsonConvert.DeserializeObject<BookmarksViewModel>(raw);
+            }
+            return null;
+        }
+
+        public static void SaveTopStories(string raw)
+        {
+            IsoStorage.Save<string>(FILENAME_TOPSTORIES_JSON, raw);
+        }
+
+        public static TopStoriesViewModel LoadTopStories()
+        {
+            var raw = IsoStorage.Load<string>(FILENAME_TOPSTORIES_JSON);
+            if(raw!=null)
+            {
+                return JsonConvert.DeserializeObject<TopStoriesViewModel>(raw);
+            }
+            return null;
+        }
+
+        public static void SaveCategories(string raw)
+        {
+            IsoStorage.Save<string>(FILENAME_CATEGORIES_JSON, raw);
+        }
+
+        public static CategoriesViewModel LoadCategories()
+        {
+            var raw = IsoStorage.Load<string>(FILENAME_CATEGORIES_JSON);
+            if(raw!=null)
+            {
+                return JsonConvert.DeserializeObject<CategoriesViewModel>(raw);
+            }
+            return null;
+        }
+
+        #endregion
     }
 }

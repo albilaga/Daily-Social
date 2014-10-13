@@ -45,6 +45,7 @@ namespace DailySocial.View.Tabs
         public static ActionBar.Tab GetViewPageTab(this ViewPager viewPager, ActionBar actionBar, string name)
         {
             var tab = actionBar.NewTab();
+            tab.SetIcon(null);
             tab.SetText(name);
             tab.TabSelected += (o, e) =>
             {
