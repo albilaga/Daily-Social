@@ -15,9 +15,9 @@ namespace DailySocial.View.Tabs
 {
     public class CategoriesFragment : Android.Support.V4.App.Fragment
     {
-        public ListView ListViewOnCategories;
-        public ProgressBar ProgressBarOnCategories;
-        public bool IsLoadedOnCategories;
+        private ListView _ListViewOnCategories;
+        private ProgressBar _ProgressBarOnCategories;
+        private bool _IsLoadedOnCategories;
         public CategoriesViewModel DataCategories;
 
         public override void OnAttach(Activity activity)
@@ -25,7 +25,7 @@ namespace DailySocial.View.Tabs
             DataCategories = ListUtils.LoadCategories();
             if (DataCategories != null)
             {
-                IsLoadedOnCategories = true;
+                _IsLoadedOnCategories = true;
                 Task.Factory.StartNew(() => UpdateListAdapter(""));
             }
             base.OnAttach(activity);
@@ -37,11 +37,11 @@ namespace DailySocial.View.Tabs
         /// <param name="raw">data raw from web</param>
         public void UpdateListAdapter(string raw)
         {
-            if (!IsLoadedOnCategories || raw != "")
+            if (!_IsLoadedOnCategories || raw != "")
             {
                 Log.Info("ds", "Load categories from web");
                 DataCategories = JsonConvert.DeserializeObject<CategoriesViewModel>(raw);
-                IsLoadedOnCategories = true;
+                _IsLoadedOnCategories = true;
             }
             ShowList();
         }
@@ -53,12 +53,12 @@ namespace DailySocial.View.Tabs
         {
             if (Activity.ActionBar.SelectedNavigationIndex == 1)
             {
-                if (IsLoadedOnCategories)
+                if (_IsLoadedOnCategories)
                 {
                     Activity.RunOnUiThread(() =>
                     {
-                        ProgressBarOnCategories.Activated = false;
-                        ListViewOnCategories.Adapter = new CategoriesAdapter(Activity, DataCategories.Categories);
+                        _ProgressBarOnCategories.Activated = false;
+                        _ListViewOnCategories.Adapter = new CategoriesAdapter(Activity, DataCategories.Categories);
                     });
                 }
             }
@@ -67,9 +67,9 @@ namespace DailySocial.View.Tabs
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             var view = inflater.Inflate(Resource.Layout.ListLayout, container, false);
-            ListViewOnCategories = view.FindViewById<ListView>(Resource.Id.ListView);
-            ListViewOnCategories.ItemClick += OnListItemClick;
-            ProgressBarOnCategories = view.FindViewById<ProgressBar>(Resource.Id.ProgressBar);
+            _ListViewOnCategories = view.FindViewById<ListView>(Resource.Id.ListView);
+            _ListViewOnCategories.ItemClick += OnListItemClick;
+            _ProgressBarOnCategories = view.FindViewById<ProgressBar>(Resource.Id.ProgressBar);
             view.FindViewById<TextView>(Resource.Id.TextView).Visibility = ViewStates.Gone;
             base.OnCreateView(inflater, container, savedInstanceState);
             return view;

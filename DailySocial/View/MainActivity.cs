@@ -1,17 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using Android.App;
+﻿using Android.App;
 using Android.OS;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
-using Android.Util;
 using Android.Views;
 using DailySocial.Utils;
 using DailySocial.View.Tabs;
+using System;
+using System.Threading.Tasks;
 
 namespace DailySocial.View
 {
-    [Activity(MainLauncher=true,Theme = "@style/Theme.ActionBarSize")]
+    [Activity(MainLauncher = true, Theme = "@style/Theme.ActionBarSize")]
     public class MainActivity : FragmentActivity, ViewPager.IOnPageChangeListener
     {
         private DataService _TopStoriesDownloader;
@@ -32,7 +31,7 @@ namespace DailySocial.View
             _TopStoriesDownloader.DownloadCompleted += OnTopStoriesDownloaderDownloadCompleted;
             _CategoriesDownloader.GetCategories();
             _CategoriesDownloader.DownloadCompleted += OnCategoriesDownloaderDownloadCompleted;
-            
+
             RequestWindowFeature(WindowFeatures.ActionBar);
             ActionBar.NavigationMode = ActionBarNavigationMode.Tabs;
             ActionBar.SetDisplayShowTitleEnabled(false);
@@ -43,12 +42,12 @@ namespace DailySocial.View
 
             LayoutInflater inflater = (LayoutInflater)GetSystemService(LayoutInflaterService);
             Android.Views.View v = inflater.Inflate(Resource.Layout.CustomActionBar, null);
-            ActionBar.SetCustomView(v, new ActionBar.LayoutParams(ViewGroup.LayoutParams.WrapContent,ViewGroup.LayoutParams.WrapContent,GravityFlags.Center));
+            ActionBar.SetCustomView(v, new ActionBar.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent, GravityFlags.Center));
 
             Android.Views.View homeIcon = FindViewById(Android.Resource.Id.Home);
             ((Android.Views.View)homeIcon.Parent).Visibility = ViewStates.Gone;
 
-            // Set our view from the "main" layout resource         
+            // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
             //Get UI Control
@@ -92,13 +91,6 @@ namespace DailySocial.View
                 _CategoriesDownloader.GetCategories();
             }
             base.OnResume();
-        }
-
-        public override void OnLowMemory()
-        {
-            Log.Info("ds", "Low memory");
-            _TopStoriesFragment.RecycleImage();
-            base.OnLowMemory();
         }
 
         private void OnCategoriesDownloaderDownloadCompleted(object sender, EventArgs e)

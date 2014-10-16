@@ -62,17 +62,6 @@ namespace DailySocial.View
         /// </summary>
         public override void OnBackPressed()
         {
-            if (_DataArticlesByCategory.Posts != null)
-            {
-                foreach (var x in _DataArticlesByCategory.Posts)
-                {
-                    if (x.Attachments[0].Images.Full.Images != null)
-                    {
-                        x.Attachments[0].Images.Full.Images.Recycle();
-                        x.Attachments[0].Images.Full.Images.Dispose();
-                    }
-                }
-            }
             _ArticlesByCategoryDownloader = null;
             if (_DataArticlesByCategory.Posts != null)
             {

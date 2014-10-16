@@ -9,15 +9,5 @@ namespace DailySocial.Models
         public int Width { get; set; }
 
         public int Height { get; set; }
-
-        public Bitmap Images
-        {
-            get
-
-                //return ListUtils.GetImageBitmapFromUrl(Url);
-                ;
-            set
-                    ;
-        }
     }
 }
