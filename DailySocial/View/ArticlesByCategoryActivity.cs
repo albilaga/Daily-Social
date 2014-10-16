@@ -8,8 +8,8 @@ using DailySocial.View.Tabs.Adapter;
 using DailySocial.ViewModel;
 using Newtonsoft.Json;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace DailySocial.View
 {
@@ -27,7 +27,7 @@ namespace DailySocial.View
             base.OnCreate(bundle);
 
             string title = Intent.GetStringExtra("TitleFromCategories");
-            this.Title = title;
+            Title = title;
 
             //UI Layout
             SetContentView(Resource.Layout.ListLayout);
@@ -51,10 +51,10 @@ namespace DailySocial.View
         private void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             Intent intent = new Intent(BaseContext, typeof(DetailArticleActivity));
-            intent.PutExtra("IdForDetail", e.Id.ToString());
+            intent.PutExtra("IdForDetail", e.Id.ToString(CultureInfo.InvariantCulture));
             StartActivity(intent);
-            System.GC.Collect();
-            System.GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         /// <summary>
@@ -79,13 +79,14 @@ namespace DailySocial.View
                 _DataArticlesByCategory.Posts.Clear();
                 _DataArticlesByCategory.Posts = null;
             }
+            // ReSharper disable once RedundantCheckBeforeAssignment
             if (_DataArticlesByCategory != null)
             {
                 _DataArticlesByCategory = null;
             }
-            System.GC.Collect();
-            System.GC.WaitForPendingFinalizers();
-            this.Finish();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Finish();
             base.OnBackPressed();
         }
 
@@ -95,23 +96,22 @@ namespace DailySocial.View
             if (((DownloadEventArgs)e).ResultDownload != null)
             {
                 string raw = ((DownloadEventArgs)e).ResultDownload;
-                if (raw.Length != 0 && raw != null)
+                if (raw.Length != 0)
                 {
                     Task.Factory.StartNew(() =>
                         {
                             _DataArticlesByCategory = JsonConvert.DeserializeObject<TopStoriesViewModel>(raw);
-                            int index = 0;
-                            foreach (var x in _DataArticlesByCategory.Posts)
-                            {
-                                x.Title = HttpUtility.HtmlDecode(x.Title);
-                                Log.Info("ds", "index = " + index);
-                                //Log.Info
-                                if (x.Attachments.Count > 0)
-                                {
-                                    x.Attachments[0].Images.Full.Images = ListUtils.GetImageBitmapFromUrl(x.Attachments[0].Images.Medium.Url);
-                                }
-                                index++;
-                            }
+                            //foreach (var x in _DataArticlesByCategory.Posts)
+                            //{
+                            //    x.Title = HttpUtility.HtmlDecode(x.Title);
+                            //    Log.Info("ds", "index = " + index);
+                            //    //Log.Info
+                            //    if (x.Attachments.Count > 0)
+                            //    {
+                            //        x.Attachments[0].Images.Full.Images = ListUtils.GetImageBitmapFromUrl(x.Attachments[0].Images.Medium.Url);
+                            //    }
+                            //    index++;
+                            //}
                             Log.Info("ds", "bitmap downloaded");
                             _IsLoaded = true;
                             Log.Info("ds", "fragment articles by categories visible");

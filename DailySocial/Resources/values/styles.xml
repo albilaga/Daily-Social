@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  <style name="Theme.ActionBarSize" parent="Theme.AppCompat.Light">
+    <item name="android:actionBarStyle">@style/thin_ab_style</item>
+  </style>
+  <style name="thin_ab_style" parent="@style/Widget.AppCompat.Light.ActionBar">
+    <item name="android:height">100dp</item>
+  </style>
+</resources>

@@ -1,4 +1,4 @@
-using Android.App;
+using System.Globalization;
 using Android.Content;
 using Android.OS;
 using Android.Views;
@@ -58,7 +58,7 @@ namespace DailySocial.View.Tabs
         private void OnListItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             Intent intent = new Intent(Activity.BaseContext, typeof(DetailArticleActivity));
-            intent.PutExtra("IdForDetail", e.Id.ToString());
+            intent.PutExtra("IdForDetail", e.Id.ToString(CultureInfo.InvariantCulture));
             Activity.StartActivity(intent);
             System.GC.Collect();
             System.GC.WaitForPendingFinalizers();

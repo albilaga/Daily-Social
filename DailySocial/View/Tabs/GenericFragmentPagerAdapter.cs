@@ -4,9 +4,9 @@ using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Util;
 using Android.Views;
-
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace DailySocial.View.Tabs
 {
@@ -49,7 +49,7 @@ namespace DailySocial.View.Tabs
             tab.SetText(name);
             tab.TabSelected += (o, e) =>
             {
-                Log.Info("ds", "tab = " + actionBar.SelectedNavigationIndex.ToString());
+                Log.Info("ds", "tab = " + actionBar.SelectedNavigationIndex.ToString(CultureInfo.InvariantCulture));
                 viewPager.SetCurrentItem(actionBar.SelectedNavigationIndex, false);
             };
             return tab;

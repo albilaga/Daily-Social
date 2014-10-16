@@ -26,7 +26,7 @@ namespace DailySocial.ViewModel
 
         public CategoriesViewModel(RootCategoriesModel model = null)
         {
-            this._Model = model ?? new RootCategoriesModel();
+            _Model = model ?? new RootCategoriesModel();
         }
 
         public string Status

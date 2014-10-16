@@ -1,3 +1,4 @@
+using Android.Graphics;
 using DailySocial.Models;
 
 using Android.App;
@@ -5,6 +6,7 @@ using Android.Views;
 using Android.Widget;
 
 using System.Collections.Generic;
+using DailySocial.Utils;
 
 namespace DailySocial.View.Tabs.Adapter
 {
@@ -14,10 +16,9 @@ namespace DailySocial.View.Tabs.Adapter
         private Activity _Context;
 
         public TopStoriesAdapter(Activity context, List<PostModel> posts)
-            : base()
         {
-            this._Context = context;
-            this._Posts = posts;
+            _Context = context;
+            _Posts = posts;
         }
 
         /// <summary>
@@ -54,15 +55,15 @@ namespace DailySocial.View.Tabs.Adapter
             {
                 view = _Context.LayoutInflater.Inflate(Resource.Layout.SingleListTopStoriesLayout, parent, false);
             }
-            view.FindViewById<TextView>(Resource.Id.Title).Text = post.Title;
-            view.FindViewById<TextView>(Resource.Id.News).Text = post.Excerpt;
+            view.FindViewById<TextView>(Resource.Id.AuthorAndDate).Text = string.Format("{0} | {1}", post.Author.Name, post.LongDateTime);
+            view.FindViewById<TextView>(Resource.Id.Title).Text = post.TitleDecode;
             if (post.Attachments.Count != 0)
             {
-                view.FindViewById<ImageView>(Resource.Id.ImagePost).SetImageBitmap(post.Attachments[0].Images.Full.Images);
-            }
-            else if (post.Attachments.Count == 0)
-            {
-                view.FindViewById<ImageView>(Resource.Id.ImagePost).Visibility = ViewStates.Invisible;
+                ListUtils.LoadBitmap(post.Attachments[0].Images.Medium.Url,BitmapFactory.DecodeResource(Application.Context.Resources,Resource.Drawable.Icon), view.FindViewById<ImageView>(Resource.Id.ImagePost));
+                //if (post.Attachments[0].Images.Full.Images != null)
+                //{
+                //    view.FindViewById<ImageView>(Resource.Id.ImagePost).SetImageBitmap(post.Attachments[0].Images.Full.Images);
+                //}
             }
             return view;
         }

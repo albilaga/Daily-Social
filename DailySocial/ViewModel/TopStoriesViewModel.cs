@@ -1,16 +1,7 @@
+using DailySocial.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using System.ComponentModel;
-using DailySocial.Models;
 
 namespace DailySocial.ViewModel
 {
@@ -29,13 +20,13 @@ namespace DailySocial.ViewModel
             }
         }
 
-        #endregion
+        #endregion INotifyPropertyChanged implementation
 
         private RootTopStoriesModel _Model;
 
-        public TopStoriesViewModel(RootTopStoriesModel model=null)
+        public TopStoriesViewModel(RootTopStoriesModel model = null)
         {
-            this._Model = model ?? new RootTopStoriesModel();
+            _Model = model ?? new RootTopStoriesModel();
         }
 
         public string Status
@@ -46,7 +37,7 @@ namespace DailySocial.ViewModel
             }
             set
             {
-                if(value!=_Model.Status)
+                if (value != _Model.Status)
                 {
                     _Model.Status = value;
                     NotifyPropertyChanged("Status");
@@ -62,7 +53,7 @@ namespace DailySocial.ViewModel
             }
             set
             {
-                if(value!=_Model.Posts)
+                if (value != _Model.Posts)
                 {
                     _Model.Posts = value;
                     NotifyPropertyChanged("Posts");
@@ -71,6 +62,7 @@ namespace DailySocial.ViewModel
         }
 
         private List<PostModel> _TempPosts;
+
         public List<PostModel> TempPosts
         {
             get
@@ -79,7 +71,7 @@ namespace DailySocial.ViewModel
             }
             set
             {
-                if(value!=_TempPosts)
+                if (value != _TempPosts)
                 {
                     _TempPosts = value;
                     NotifyPropertyChanged("TempPosts");

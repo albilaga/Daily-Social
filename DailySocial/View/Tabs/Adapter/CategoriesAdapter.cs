@@ -1,9 +1,7 @@
-﻿using DailySocial.Models;
-
-using Android.App;
+﻿using Android.App;
 using Android.Views;
 using Android.Widget;
-
+using DailySocial.Models;
 using System.Collections.Generic;
 
 namespace DailySocial.View.Tabs.Adapter
@@ -14,10 +12,9 @@ namespace DailySocial.View.Tabs.Adapter
         private Activity _Context;
 
         public CategoriesAdapter(Activity context, List<CategoryModel> category)
-            : base()
         {
-            this._Context = context;
-            this._Category = category;
+            _Context = context;
+            _Category = category;
         }
 
         /// <summary>

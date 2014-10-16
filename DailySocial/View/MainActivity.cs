@@ -1,4 +1,6 @@
-﻿using Android.App;
+﻿using System;
+using System.Threading.Tasks;
+using Android.App;
 using Android.OS;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
@@ -6,12 +8,10 @@ using Android.Util;
 using Android.Views;
 using DailySocial.Utils;
 using DailySocial.View.Tabs;
-using System;
-using System.Threading.Tasks;
 
-namespace DailySocial
+namespace DailySocial.View
 {
-    [Activity(Label = "Daily Social", MainLauncher = true, Icon = "@drawable/icon", Theme = "@style/Theme.AppCompat.Light")]
+    [Activity(MainLauncher=true,Theme = "@style/Theme.ActionBarSize")]
     public class MainActivity : FragmentActivity, ViewPager.IOnPageChangeListener
     {
         private DataService _TopStoriesDownloader;
@@ -29,14 +29,26 @@ namespace DailySocial
             _CategoriesDownloader = new DataService();
 
             _TopStoriesDownloader.GetTopStories();
-            _TopStoriesDownloader.DownloadCompleted += _TopStoriesDownloader_DownloadCompleted;
+            _TopStoriesDownloader.DownloadCompleted += OnTopStoriesDownloaderDownloadCompleted;
             _CategoriesDownloader.GetCategories();
-            _CategoriesDownloader.DownloadCompleted += _CategoriesDownloader_DownloadCompleted;
-
+            _CategoriesDownloader.DownloadCompleted += OnCategoriesDownloaderDownloadCompleted;
+            
             RequestWindowFeature(WindowFeatures.ActionBar);
             ActionBar.NavigationMode = ActionBarNavigationMode.Tabs;
+            ActionBar.SetDisplayShowTitleEnabled(false);
+            ActionBar.SetDisplayShowCustomEnabled(true);
+            ActionBar.SetDisplayShowHomeEnabled(true);
+            ActionBar.SetDisplayUseLogoEnabled(false);
+            //ActionBar.SetCustomView(Resource.Layout.CustomActionBar);
 
-            // Set our view from the "main" layout resource
+            LayoutInflater inflater = (LayoutInflater)GetSystemService(LayoutInflaterService);
+            Android.Views.View v = inflater.Inflate(Resource.Layout.CustomActionBar, null);
+            ActionBar.SetCustomView(v, new ActionBar.LayoutParams(ViewGroup.LayoutParams.WrapContent,ViewGroup.LayoutParams.WrapContent,GravityFlags.Center));
+
+            Android.Views.View homeIcon = FindViewById(Android.Resource.Id.Home);
+            ((Android.Views.View)homeIcon.Parent).Visibility = ViewStates.Gone;
+
+            // Set our view from the "main" layout resource         
             SetContentView(Resource.Layout.Main);
 
             //Get UI Control
@@ -89,14 +101,14 @@ namespace DailySocial
             base.OnLowMemory();
         }
 
-        private void _CategoriesDownloader_DownloadCompleted(object sender, EventArgs e)
+        private void OnCategoriesDownloaderDownloadCompleted(object sender, EventArgs e)
         {
-            _CategoriesDownloader.DownloadCompleted -= _CategoriesDownloader_DownloadCompleted;
+            _CategoriesDownloader.DownloadCompleted -= OnCategoriesDownloaderDownloadCompleted;
             string raw;
             if (((DownloadEventArgs)e).ResultDownload != null)
             {
                 raw = ((DownloadEventArgs)e).ResultDownload;
-                if (raw != null || raw.Length != 0)
+                if (raw.Length != 0)
                 {
                     Task.Factory.StartNew(() => _CategoriesFragment.UpdateListAdapter(raw));
                     ListUtils.SaveCategories(raw);
@@ -104,14 +116,14 @@ namespace DailySocial
             }
         }
 
-        private void _TopStoriesDownloader_DownloadCompleted(object sender, EventArgs e)
+        private void OnTopStoriesDownloaderDownloadCompleted(object sender, EventArgs e)
         {
-            _TopStoriesDownloader.DownloadCompleted -= _TopStoriesDownloader_DownloadCompleted;
+            _TopStoriesDownloader.DownloadCompleted -= OnTopStoriesDownloaderDownloadCompleted;
             string raw;
             if (((DownloadEventArgs)e).ResultDownload != null)
             {
                 raw = ((DownloadEventArgs)e).ResultDownload;
-                if (raw != null || raw.Length != 0)
+                if (raw.Length != 0)
                 {
                     Task.Factory.StartNew(() => _TopStoriesFragment.UpdateListAdapter(raw));
                     ListUtils.SaveTopStories(raw);

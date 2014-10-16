@@ -45,10 +45,7 @@ namespace DailySocial.Utils
                         return (T)serializer.ReadObject(fileStream);
                     }
                 }
-                else
-                {
-                    return default(T);
-                }
+                return default(T);
             }
         }
 
@@ -61,10 +58,7 @@ namespace DailySocial.Utils
                     var stream = iso.OpenFile(fileName, FileMode.Open, FileAccess.Read);
                     return stream;
                 }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
         }
 
@@ -77,10 +71,7 @@ namespace DailySocial.Utils
                     storage.DeleteFile(fileName);
                     return true;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
         }
     }

@@ -8,6 +8,7 @@ using DailySocial.Utils;
 using DailySocial.View.Tabs.Adapter;
 using DailySocial.ViewModel;
 using Newtonsoft.Json;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace DailySocial.View.Tabs
@@ -16,10 +17,10 @@ namespace DailySocial.View.Tabs
     {
         public ListView ListViewOnCategories;
         public ProgressBar ProgressBarOnCategories;
-        public bool IsLoadedOnCategories = false;
+        public bool IsLoadedOnCategories;
         public CategoriesViewModel DataCategories;
 
-        public override void OnActivityCreated(Bundle savedInstanceState)
+        public override void OnAttach(Activity activity)
         {
             DataCategories = ListUtils.LoadCategories();
             if (DataCategories != null)
@@ -27,7 +28,7 @@ namespace DailySocial.View.Tabs
                 IsLoadedOnCategories = true;
                 Task.Factory.StartNew(() => UpdateListAdapter(""));
             }
-            base.OnActivityCreated(savedInstanceState);
+            base.OnAttach(activity);
         }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace DailySocial.View.Tabs
         /// </summary>
         public void ShowList()
         {
-            if (this.Activity.ActionBar.SelectedNavigationIndex == 1)
+            if (Activity.ActionBar.SelectedNavigationIndex == 1)
             {
                 if (IsLoadedOnCategories)
                 {
@@ -82,7 +83,7 @@ namespace DailySocial.View.Tabs
         private void OnListItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             Intent intent = new Intent(Activity.BaseContext, typeof(ArticlesByCategoryActivity));
-            intent.PutExtra("IdFromCategories", e.Id.ToString());
+            intent.PutExtra("IdFromCategories", e.Id.ToString(CultureInfo.InvariantCulture));
             intent.PutExtra("TitleFromCategories", DataCategories.Categories[e.Position].Title);
             Activity.StartActivity(intent);
             System.GC.Collect();

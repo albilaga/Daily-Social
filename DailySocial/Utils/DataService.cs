@@ -82,8 +82,11 @@ namespace DailySocial.Utils
         {
             WebClient wc = sender as WebClient;
             Log.Info("ds", "download completed 1");
-            wc.DownloadStringCompleted -= OnDownloadStringCompleted;
-            wc.Dispose();
+            if (wc != null)
+            {
+                wc.DownloadStringCompleted -= OnDownloadStringCompleted;
+                wc.Dispose();
+            }
             if (DownloadCompleted != null)
             {
                 var args = new DownloadEventArgs();
@@ -92,7 +95,7 @@ namespace DailySocial.Utils
                     args.ResultDownload = e.Result;
                     Log.Info("ds", e.Result);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     args.ResultDownload = null;
                 }

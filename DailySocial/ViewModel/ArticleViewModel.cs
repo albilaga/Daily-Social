@@ -1,16 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System.ComponentModel;
 using DailySocial.Models;
+using System;
+using System.ComponentModel;
 
 namespace DailySocial.ViewModel
 {
@@ -29,13 +19,13 @@ namespace DailySocial.ViewModel
             }
         }
 
-        #endregion
+        #endregion INotifyPropertyChanged implementation
 
         private RootArticleModel _Model;
 
-        public ArticleViewModel(RootArticleModel model=null)
+        public ArticleViewModel(RootArticleModel model = null)
         {
-            this._Model = model ?? new RootArticleModel();
+            _Model = model ?? new RootArticleModel();
         }
 
         public string Status
@@ -46,7 +36,7 @@ namespace DailySocial.ViewModel
             }
             set
             {
-                if(value!=_Model.Status)
+                if (value != _Model.Status)
                 {
                     _Model.Status = value;
                     NotifyPropertyChanged("Status");
@@ -62,13 +52,12 @@ namespace DailySocial.ViewModel
             }
             set
             {
-                if(value!=_Model.Post)
+                if (value != _Model.Post)
                 {
                     _Model.Post = value;
                     NotifyPropertyChanged("Post");
                 }
             }
         }
-
     }
 }

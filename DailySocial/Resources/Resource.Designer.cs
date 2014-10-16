@@ -799,7 +799,7 @@ namespace DailySocial
 			public const int abc_textfield_searchview_right_holo_light = 2130837590;
 			
 			// aapt resource value: 0x7f020057
-			public const int DailySocial = 2130837591;
+			public const int HeaderDailySocial = 2130837591;
 			
 			// aapt resource value: 0x7f020058
 			public const int ic_action_rating_important = 2130837592;
@@ -823,14 +823,17 @@ namespace DailySocial
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f05003c
+			public const int ActionBarLogo = 2131034172;
+			
 			// aapt resource value: 0x7f050048
 			public const int ActionShare = 2131034184;
 			
+			// aapt resource value: 0x7f050046
+			public const int AuthorAndDate = 2131034182;
+			
 			// aapt resource value: 0x7f050049
 			public const int Bookmarks = 2131034185;
-			
-			// aapt resource value: 0x7f05003f
-			public const int ContentTextView = 2131034175;
 			
 			// aapt resource value: 0x7f050043
 			public const int FragmentContainer = 2131034179;
@@ -838,29 +841,26 @@ namespace DailySocial
 			// aapt resource value: 0x7f050045
 			public const int ImagePost = 2131034181;
 			
-			// aapt resource value: 0x7f05003e
-			public const int ImageTitleHolder = 2131034174;
-			
 			// aapt resource value: 0x7f050040
 			public const int ListView = 2131034176;
 			
 			// aapt resource value: 0x7f050044
 			public const int NameCategory = 2131034180;
 			
-			// aapt resource value: 0x7f050047
-			public const int News = 2131034183;
-			
 			// aapt resource value: 0x7f050042
 			public const int ProgressBar = 2131034178;
 			
-			// aapt resource value: 0x7f05003d
-			public const int ProgressBarOnDetail = 2131034173;
+			// aapt resource value: 0x7f05003e
+			public const int ProgressBarOnDetail = 2131034174;
 			
 			// aapt resource value: 0x7f050041
 			public const int TextView = 2131034177;
 			
-			// aapt resource value: 0x7f050046
-			public const int Title = 2131034182;
+			// aapt resource value: 0x7f050047
+			public const int Title = 2131034183;
+			
+			// aapt resource value: 0x7f05003f
+			public const int WebView = 2131034175;
 			
 			// aapt resource value: 0x7f05001c
 			public const int action_bar = 2131034140;
@@ -940,8 +940,8 @@ namespace DailySocial
 			// aapt resource value: 0x7f050005
 			public const int homeAsUp = 2131034117;
 			
-			// aapt resource value: 0x7f05003c
-			public const int horizontalScrollView1 = 2131034172;
+			// aapt resource value: 0x7f05003d
+			public const int horizontalScrollView1 = 2131034173;
 			
 			// aapt resource value: 0x7f05002a
 			public const int icon = 2131034154;
@@ -1147,22 +1147,25 @@ namespace DailySocial
 			public const int abc_simple_decor = 2130903063;
 			
 			// aapt resource value: 0x7f030018
-			public const int DetailArticleLayout = 2130903064;
+			public const int CustomActionBar = 2130903064;
 			
 			// aapt resource value: 0x7f030019
-			public const int ListLayout = 2130903065;
+			public const int DetailArticleLayout = 2130903065;
 			
 			// aapt resource value: 0x7f03001a
-			public const int Main = 2130903066;
+			public const int ListLayout = 2130903066;
 			
 			// aapt resource value: 0x7f03001b
-			public const int SingleListCategoryLayout = 2130903067;
+			public const int Main = 2130903067;
 			
 			// aapt resource value: 0x7f03001c
-			public const int SingleListTopStoriesLayout = 2130903068;
+			public const int SingleListCategoryLayout = 2130903068;
 			
 			// aapt resource value: 0x7f03001d
-			public const int support_simple_spinner_dropdown_item = 2130903069;
+			public const int SingleListTopStoriesLayout = 2130903069;
+			
+			// aapt resource value: 0x7f03001e
+			public const int support_simple_spinner_dropdown_item = 2130903070;
 			
 			static Layout()
 			{
@@ -1376,6 +1379,9 @@ namespace DailySocial
 			
 			// aapt resource value: 0x7f0b0028
 			public const int TextAppearance_Widget_AppCompat_ExpandedMenu_Item = 2131427368;
+			
+			// aapt resource value: 0x7f0b008b
+			public const int Theme_ActionBarSize = 2131427467;
 			
 			// aapt resource value: 0x7f0b0077
 			public const int Theme_AppCompat = 2131427447;
@@ -1670,6 +1676,9 @@ namespace DailySocial
 			
 			// aapt resource value: 0x7f0b0022
 			public const int Widget_AppCompat_Spinner_DropDown_ActionBar = 2131427362;
+			
+			// aapt resource value: 0x7f0b008c
+			public const int thin_ab_style = 2131427468;
 			
 			static Style()
 			{
