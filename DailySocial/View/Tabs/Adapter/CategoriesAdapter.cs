@@ -8,8 +8,8 @@ namespace DailySocial.View.Tabs.Adapter
 {
     internal class CategoriesAdapter : BaseAdapter<CategoryModel>
     {
-        private List<CategoryModel> _Category;
-        private Activity _Context;
+        private readonly List<CategoryModel> _Category;
+        private readonly Activity _Context;
 
         public CategoriesAdapter(Activity context, List<CategoryModel> category)
         {
@@ -46,11 +46,8 @@ namespace DailySocial.View.Tabs.Adapter
         public override Android.Views.View GetView(int position, Android.Views.View convertView, ViewGroup parent)
         {
             var post = _Category[position];
-            Android.Views.View view = convertView;
-            if (view == null)
-            {
-                view = _Context.LayoutInflater.Inflate(Resource.Layout.SingleListCategoryLayout, parent, false);
-            }
+            Android.Views.View view = convertView ??
+                                      _Context.LayoutInflater.Inflate(Resource.Layout.SingleListCategoryLayout, parent, false);
             view.FindViewById<TextView>(Resource.Id.NameCategory).Text = post.Title;
             return view;
         }

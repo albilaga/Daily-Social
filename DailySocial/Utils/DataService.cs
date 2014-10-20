@@ -31,10 +31,9 @@ namespace DailySocial.Utils
         public void GetTopStories()
         {
             Log.Info("ds", "Get top stories");
-            WebClient topStoriesClient = new WebClient();
-            topStoriesClient.Encoding = Encoding.UTF8;
+            var topStoriesClient = new CustomWebClient(10000) { Encoding = Encoding.UTF8 };
             topStoriesClient.DownloadStringCompleted += OnDownloadStringCompleted;
-            topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl));
+            topStoriesClient.DownloadStringAsync(new Uri(_GetTopStoriesUrl+GetCacheBuster()));
         }
 
         /// <summary>
@@ -43,10 +42,9 @@ namespace DailySocial.Utils
         public void GetCategories()
         {
             Log.Info("ds", "Get categories");
-            WebClient categoriesClient = new WebClient();
-            categoriesClient.Encoding = Encoding.UTF8;
+            var categoriesClient = new CustomWebClient(10000) { Encoding = Encoding.UTF8 };
             categoriesClient.DownloadStringCompleted += OnDownloadStringCompleted;
-            categoriesClient.DownloadStringAsync(new Uri(_GetCategoriesUrl));
+            categoriesClient.DownloadStringAsync(new Uri(_GetCategoriesUrl+GetCacheBuster()));
         }
 
         /// <summary>
@@ -55,10 +53,10 @@ namespace DailySocial.Utils
         /// <param name="id">id from categories</param>
         public void GetArticlesByCategory(int id)
         {
-            WebClient postByCategoryClient = new WebClient();
-            postByCategoryClient.Encoding = Encoding.UTF8;
+            Log.Debug("ds", "Get Articles from category = " + id);
+            var postByCategoryClient = new CustomWebClient(10000) { Encoding = Encoding.UTF8 };
             postByCategoryClient.DownloadStringCompleted += OnDownloadStringCompleted;
-            postByCategoryClient.DownloadStringAsync(new Uri(_GetListArticleByCategoriesUrl + id));
+            postByCategoryClient.DownloadStringAsync(new Uri(_GetListArticleByCategoriesUrl + id+GetCacheBuster()));
         }
 
         /// <summary>
@@ -67,10 +65,9 @@ namespace DailySocial.Utils
         /// <param name="id">id from posts</param>
         public void GetDetailArticle(int id)
         {
-            WebClient detailArticleClient = new WebClient();
-            detailArticleClient.Encoding = Encoding.UTF8;
+            var detailArticleClient = new CustomWebClient(10000) { Encoding = Encoding.UTF8 };
             detailArticleClient.DownloadStringCompleted += OnDownloadStringCompleted;
-            detailArticleClient.DownloadStringAsync(new Uri(_GetDetailArticleUrl + id));
+            detailArticleClient.DownloadStringAsync(new Uri(_GetDetailArticleUrl + id+GetCacheBuster()));
         }
 
         /// <summary>
@@ -80,32 +77,34 @@ namespace DailySocial.Utils
         /// <param name="e"></param>
         private void OnDownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
-            WebClient wc = sender as WebClient;
+            if (e.Error != null)
+            {
+                Log.Debug("ds", e.Error.Message);
+            }
+            var wc = sender as WebClient;
             Log.Info("ds", "download completed 1");
             if (wc != null)
             {
                 wc.DownloadStringCompleted -= OnDownloadStringCompleted;
                 wc.Dispose();
             }
-            if (DownloadCompleted != null)
+            if (DownloadCompleted == null) return;
+            var args = new DownloadEventArgs();
+            try
             {
-                var args = new DownloadEventArgs();
-                try
-                {
-                    args.ResultDownload = e.Result;
-                    Log.Info("ds", e.Result);
-                }
-                catch (Exception)
-                {
-                    args.ResultDownload = null;
-                }
-                DownloadCompleted.Invoke(this, args);
+                args.ResultDownload = e.Result;
+                Log.Info("ds", e.Result);
             }
+            catch (Exception)
+            {
+                args.ResultDownload = null;
+            }
+            DownloadCompleted.Invoke(this, args);
         }
 
-        public string GetCacheBuster()
+        private static string GetCacheBuster()
         {
-            StringBuilder sb = new StringBuilder("&cache=");
+            var sb = new StringBuilder("&cache=");
             sb.Append(Guid.NewGuid().ToString());
             return sb.ToString();
         }

@@ -3,18 +3,66 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-    <ListView
-        android:id="@+id/ListView"
+<!--<RelativeLayout
+        android:id="@+id/HighlightRelativeLayout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-    <TextView
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/TextView"
-        android:layout_gravity="center" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp">
+        <LinearLayout
+            android:id="@+id/HighlightLinearLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="73dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:gravity="center"
+                android:id="@+id/HighlightImageView" />
+            <TextView
+                android:id="@+id/HighlightAuthorAndDate"
+                android:background="#403f41"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffffff" />
+            <TextView
+                android:id="@+id/HighlightTitle"
+                android:background="#403f41"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffffff" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#88000000"
+            android:text="WHAT'S NEW"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#ffffffff"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_alignLeft="@+id/HighlightRelativeLayout"
+            android:layout_alignTop="@+id/HighlightRelativeLayout"
+            android:layout_alignRight="@+id/HighlightRelativeLayout"
+            android:layout_alignBottom="@+id/HighlightRelativeLayout" />
+    </RelativeLayout>-->
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:id="@+id/ProgressBar" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/TextView"
+        android:gravity="center"
+        android:text="Anda belum memfavoritkan apapun"
+        android:textSize="20sp" />
+    <ListView
+        android:id="@+id/ListView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 </LinearLayout>

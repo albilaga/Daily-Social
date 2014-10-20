@@ -21,6 +21,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/ProgressBarOnDetail" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:id="@+id/TitleTextView"
+            android:layout_margin="10dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="9sp"
+            android:id="@+id/AuthorAndDateTimeTextView"
+            android:layout_margin="10dp" />
         <WebView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

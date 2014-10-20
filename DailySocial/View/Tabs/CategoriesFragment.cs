@@ -51,17 +51,18 @@ namespace DailySocial.View.Tabs
         /// </summary>
         public void ShowList()
         {
-            if (Activity.ActionBar.SelectedNavigationIndex == 1)
+            if (Activity.ActionBar.SelectedNavigationIndex != 1) return;
+            if (_IsLoadedOnCategories)
             {
-                if (_IsLoadedOnCategories)
+                Activity.RunOnUiThread(() =>
                 {
-                    Activity.RunOnUiThread(() =>
-                    {
-                        _ProgressBarOnCategories.Activated = false;
-                        _ListViewOnCategories.Adapter = new CategoriesAdapter(Activity, DataCategories.Categories);
-                    });
-                }
+                    _ListViewOnCategories.Adapter = new CategoriesAdapter(Activity, DataCategories.Categories);
+                });
             }
+            Activity.RunOnUiThread(() =>
+            {
+                _ProgressBarOnCategories.Visibility = ViewStates.Gone;
+            });
         }
 
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -82,12 +83,22 @@ namespace DailySocial.View.Tabs
         /// <param name="e"></param>
         private void OnListItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            Intent intent = new Intent(Activity.BaseContext, typeof(ArticlesByCategoryActivity));
+            var intent = new Intent(Activity.BaseContext, typeof(ArticlesByCategoryActivity));
             intent.PutExtra("IdFromCategories", e.Id.ToString(CultureInfo.InvariantCulture));
             intent.PutExtra("TitleFromCategories", DataCategories.Categories[e.Position].Title);
             Activity.StartActivity(intent);
             System.GC.Collect();
             System.GC.WaitForPendingFinalizers();
+        }
+
+        public void Reset()
+        {
+            if (Activity.ActionBar.SelectedNavigationIndex != 1) return;
+            Activity.RunOnUiThread(() =>
+            {
+                _ProgressBarOnCategories.Visibility = ViewStates.Visible;
+                _ProgressBarOnCategories.Activated = true;
+            });
         }
     }
 }

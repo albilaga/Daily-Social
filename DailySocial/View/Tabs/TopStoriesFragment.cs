@@ -19,6 +19,7 @@ namespace DailySocial.View.Tabs
         private ProgressBar _ProgressBarOnTopStories;
         private bool _IsLoadedOnTopStories;
         public TopStoriesViewModel DataTopStories;
+
         public override void OnAttach(Activity activity)
         {
             Log.Info("ds", "on attach");
@@ -54,17 +55,28 @@ namespace DailySocial.View.Tabs
         /// </summary>
         public void ShowList()
         {
-            if (Activity.ActionBar.SelectedNavigationIndex == 0)
+            if (Activity.ActionBar.SelectedNavigationIndex != 0) return;
+            if (_IsLoadedOnTopStories && DataTopStories.TempPosts != null)
             {
-                if (_IsLoadedOnTopStories)
+                Activity.RunOnUiThread(() =>
                 {
-                    Activity.RunOnUiThread(() =>
-                    {
-                        _ListViewOnTopStories.Adapter = new TopStoriesAdapter(Activity, DataTopStories.TempPosts);
-                        _ProgressBarOnTopStories.Activated = false;
-                    });
-                }
+                    _ListViewOnTopStories.Adapter = new TopStoriesAdapter(Activity, DataTopStories.TempPosts);
+                });
             }
+            Activity.RunOnUiThread(() =>
+            {
+                _ProgressBarOnTopStories.Visibility = ViewStates.Gone;
+            });
+        }
+
+        public void Reset()
+        {
+            if (Activity.ActionBar.SelectedNavigationIndex != 0) return;
+            Activity.RunOnUiThread(() =>
+            {
+                _ProgressBarOnTopStories.Visibility = ViewStates.Visible;
+                _ProgressBarOnTopStories.Activated = true;
+            });
         }
 
         public override Android.Views.View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -74,15 +86,20 @@ namespace DailySocial.View.Tabs
             _ListViewOnTopStories.ItemClick += OnListItemClick;
             _ProgressBarOnTopStories = view.FindViewById<ProgressBar>(Resource.Id.ProgressBar);
             view.FindViewById<TextView>(Resource.Id.TextView).Visibility = ViewStates.Gone;
+            Activity.RunOnUiThread(() =>
+            {
+                _ProgressBarOnTopStories.Visibility = ViewStates.Visible;
+                _ProgressBarOnTopStories.Activated = true;
+            })
+            ;
             base.OnCreateView(inflater, container, savedInstanceState);
             return view;
         }
 
         private void OnListItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            Intent intent = new Intent(Activity.BaseContext, typeof(DetailArticleActivity));
+            var intent = new Intent(Activity.BaseContext, typeof(DetailArticleActivity));
             intent.PutExtra("IdForDetail", e.Id.ToString(CultureInfo.InvariantCulture));
-            intent.PutExtra("DataRaw", JsonConvert.SerializeObject(DataTopStories.TempPosts[e.Position]));
             Activity.StartActivity(intent);
             System.GC.Collect();
             System.GC.WaitForPendingFinalizers();

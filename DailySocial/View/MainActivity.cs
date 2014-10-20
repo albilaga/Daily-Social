@@ -1,4 +1,5 @@
 ﻿using Android.App;
+using Android.Net;
 using Android.OS;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DailySocial.View
 {
-    [Activity(MainLauncher = true, Theme = "@style/Theme.ActionBarSize")]
+    [Activity(Theme = "@style/Theme.ActionBarSize")]
     public class MainActivity : FragmentActivity, ViewPager.IOnPageChangeListener
     {
         private DataService _TopStoriesDownloader;
@@ -21,6 +22,8 @@ namespace DailySocial.View
         private BookmarksFragment _BookmarksFragment;
 
         private ViewPager _ViewPager;
+        private bool _IsDataTopStoriesNull;
+        private bool _IsDataCategoriesNull;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -40,11 +43,11 @@ namespace DailySocial.View
             ActionBar.SetDisplayUseLogoEnabled(false);
             //ActionBar.SetCustomView(Resource.Layout.CustomActionBar);
 
-            LayoutInflater inflater = (LayoutInflater)GetSystemService(LayoutInflaterService);
-            Android.Views.View v = inflater.Inflate(Resource.Layout.CustomActionBar, null);
+            var inflater = (LayoutInflater)GetSystemService(LayoutInflaterService);
+            var v = inflater.Inflate(Resource.Layout.CustomActionBar, null);
             ActionBar.SetCustomView(v, new ActionBar.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent, GravityFlags.Center));
 
-            Android.Views.View homeIcon = FindViewById(Android.Resource.Id.Home);
+            var homeIcon = FindViewById(Android.Resource.Id.Home);
             ((Android.Views.View)homeIcon.Parent).Visibility = ViewStates.Gone;
 
             // Set our view from the "main" layout resource
@@ -64,11 +67,12 @@ namespace DailySocial.View
             _ViewPager.Adapter = adapter;
             _ViewPager.SetOnPageChangeListener(this);
 
-            ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Top Stories"));
-            ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Categories"));
-            ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Bookmarks"));
+            ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Terbaru"));
+            ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Kategori"));
+            ActionBar.AddTab(_ViewPager.GetViewPageTab(ActionBar, "Favorit"));
 
-            //show list to UI
+            RunOnUiThread(ShowInternetAlertDialog);
+
             base.OnCreate(bundle);
         }
 
@@ -93,33 +97,89 @@ namespace DailySocial.View
             base.OnResume();
         }
 
+        public override void OnBackPressed()
+        {
+            var builder = new AlertDialog.Builder(this);
+            builder.SetIcon(Resource.Drawable.error);
+            builder.SetTitle("Konfirmasi Keluar");
+            builder.SetMessage("Apakah anda ingin keluar?");
+            builder.SetCancelable(false);
+            builder.SetPositiveButton("Ya", (sender, e) => Finish());
+            builder.SetNegativeButton("Tidak", (sender, e) => { });
+            var alertDialog = builder.Create();
+            alertDialog.Show();
+            //get title divider and styling it
+            //got from here http://blog.supenta.com/2014/07/02/how-to-style-alertdialogs-like-a-pro/
+            //int titleDividerId = Application.Resources.GetIdentifier("titleDivider", "id", "android");
+            //Android.Views.View titleDivider = alertDialog.FindViewById(titleDividerId);
+            //if (titleDivider != null)
+            //{
+            //    titleDivider.SetBackgroundColor(new Color(Color.ParseColor("#a8cf45")));
+            //}
+        }
+
         private void OnCategoriesDownloaderDownloadCompleted(object sender, EventArgs e)
         {
             _CategoriesDownloader.DownloadCompleted -= OnCategoriesDownloaderDownloadCompleted;
-            string raw;
             if (((DownloadEventArgs)e).ResultDownload != null)
             {
-                raw = ((DownloadEventArgs)e).ResultDownload;
-                if (raw.Length != 0)
-                {
-                    Task.Factory.StartNew(() => _CategoriesFragment.UpdateListAdapter(raw));
-                    ListUtils.SaveCategories(raw);
-                }
+                var raw = ((DownloadEventArgs)e).ResultDownload;
+                if (raw.Length == 0) return;
+                Task.Factory.StartNew(() => _CategoriesFragment.UpdateListAdapter(raw));
+                ListUtils.SaveCategories(raw);
+                _IsDataCategoriesNull = false;
+            }
+            else
+            {
+                _IsDataCategoriesNull = true;
+              
+            }
+        }
+
+        private void ShowInternetAlertDialog()
+        {
+            var builder = new AlertDialog.Builder(this);
+            builder.SetIcon(Resource.Drawable.error);
+            builder.SetTitle("Jaringan Bermasalah");
+            builder.SetMessage("Apakah anda ingin mencoba download data lagi?");
+            builder.SetCancelable(false);
+            builder.SetPositiveButton("Ya", (send, eve) =>
+            {
+                _TopStoriesDownloader.DownloadCompleted += OnTopStoriesDownloaderDownloadCompleted;
+                _TopStoriesDownloader.GetTopStories();
+                _CategoriesDownloader.DownloadCompleted += OnCategoriesDownloaderDownloadCompleted;
+                _CategoriesDownloader.GetCategories();
+                _TopStoriesFragment.Reset();
+                _CategoriesFragment.Reset();
+            });
+            builder.SetNegativeButton("Tidak", (send, eve) =>
+            {
+                _TopStoriesFragment.ShowList();
+                _CategoriesFragment.ShowList();
+            });
+            var alertDialog = builder.Create();
+            var connectivityManager = (ConnectivityManager)GetSystemService(ConnectivityService);
+            var activeConnection = connectivityManager.ActiveNetworkInfo;
+            if ((activeConnection == null) || !activeConnection.IsConnected)
+            {
+                alertDialog.Show();
             }
         }
 
         private void OnTopStoriesDownloaderDownloadCompleted(object sender, EventArgs e)
         {
             _TopStoriesDownloader.DownloadCompleted -= OnTopStoriesDownloaderDownloadCompleted;
-            string raw;
             if (((DownloadEventArgs)e).ResultDownload != null)
             {
-                raw = ((DownloadEventArgs)e).ResultDownload;
-                if (raw.Length != 0)
-                {
-                    Task.Factory.StartNew(() => _TopStoriesFragment.UpdateListAdapter(raw));
-                    ListUtils.SaveTopStories(raw);
-                }
+                var raw = ((DownloadEventArgs)e).ResultDownload;
+                if (raw.Length == 0) return;
+                Task.Factory.StartNew(() => _TopStoriesFragment.UpdateListAdapter(raw));
+                ListUtils.SaveTopStories(raw);
+                _IsDataTopStoriesNull = false;
+            }
+            else
+            {
+                _IsDataTopStoriesNull = true;
             }
         }
 
@@ -134,17 +194,19 @@ namespace DailySocial.View
         public void OnPageSelected(int position)
         {
             ActionBar.SetSelectedNavigationItem(position);
-            if (ActionBar.SelectedNavigationIndex == 0)
+            switch (ActionBar.SelectedNavigationIndex)
             {
-                _TopStoriesFragment.ShowList();
-            }
-            else if (ActionBar.SelectedNavigationIndex == 1)
-            {
-                _CategoriesFragment.ShowList();
-            }
-            else if (ActionBar.SelectedNavigationIndex == 2)
-            {
-                _BookmarksFragment.ShowList();
+                case 0:
+                    _TopStoriesFragment.ShowList();
+                    break;
+
+                case 1:
+                    _CategoriesFragment.ShowList();
+                    break;
+
+                case 2:
+                    _BookmarksFragment.ShowList();
+                    break;
             }
         }
     }

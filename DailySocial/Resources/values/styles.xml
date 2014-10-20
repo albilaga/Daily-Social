@@ -2,8 +2,26 @@
 <resources>
   <style name="Theme.ActionBarSize" parent="Theme.AppCompat.Light">
     <item name="android:actionBarStyle">@style/thin_ab_style</item>
+    <item name="android:actionBarTabStyle">@style/green_tab_style</item>
   </style>
   <style name="thin_ab_style" parent="@style/Widget.AppCompat.Light.ActionBar">
     <item name="android:height">100dp</item>
+  </style>
+  <style name="green_tab_style" parent="@style/Widget.AppCompat.Light.ActionBar.TabView">
+    <item name="android:background">@drawable/actionbar_tab_indicator</item>
+  </style>
+  <style name="Theme.ActionBarGreen" parent="Theme.AppCompat.Light.DarkActionBar">
+    <item name="android:actionBarStyle">@style/MyActionBar</item>
+  </style>
+  <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
+    <item name="android:background">#a8cf45</item>
+    <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+  </style>
+  <style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <item name="android:textColor">#ffffff</item>
+  </style>
+<style name="Theme.Splash" parent="android:Theme">
+    <item name="android:windowBackground">@drawable/splashscreen</item>
+    <item name="android:windowNoTitle">true</item>
   </style>
 </resources>

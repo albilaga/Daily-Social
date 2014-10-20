@@ -50,14 +50,17 @@ namespace DailySocial.Models
 
         public string Comment_Status { get; set; }
 
-        public bool IsFavorite { get; set; }
-
         public string LongDateTime
         {
             get
             {
                 return ListUtils.DateTimeToDateConverter(Date);
             }
+        }
+
+        public string LongTime
+        {
+            get { return ListUtils.DateTimeToTimeConverter(Date); }
         }
     }
 }

@@ -16,6 +16,7 @@ namespace DailySocial.Utils
     public class BitmapWorkerTask : AsyncTask
     {
         private readonly WeakReference<ImageView> _ImageViewReference;
+
         public string Data
         {
             get;
@@ -27,11 +28,11 @@ namespace DailySocial.Utils
             if (ListUtils.Cache == null)
             {
                 Log.Debug("ds", "cache null");
-                ActivityManager am = Application.Context.GetSystemService(Context.ActivityService) as ActivityManager;
+                var am = Application.Context.GetSystemService(Context.ActivityService) as ActivityManager;
                 if (am != null)
                 {
                     Log.Debug("ds", "am not null");
-                    int memoryClass = am.MemoryClass*1024*1024;
+                    int memoryClass = am.MemoryClass * 1024 * 1024;
                     ListUtils.Cache = new LruCache(memoryClass);
                 }
             }
@@ -69,7 +70,7 @@ namespace DailySocial.Utils
                 ImageView imageView;
                 if (_ImageViewReference.TryGetTarget(out imageView))
                 {
-                    BitmapWorkerTask bitmapWorkerTask = ListUtils.GetBitmapWorkerTask(imageView);
+                    var bitmapWorkerTask = ListUtils.GetBitmapWorkerTask(imageView);
                     if (this == bitmapWorkerTask)
                     {
                         imageView.SetImageBitmap(result as Bitmap);

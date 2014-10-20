@@ -12,8 +12,8 @@ namespace DailySocial.View.Tabs.Adapter
 {
     internal class TopStoriesAdapter : BaseAdapter<PostModel>
     {
-        private List<PostModel> _Posts;
-        private Activity _Context;
+        private readonly List<PostModel> _Posts;
+        private readonly Activity _Context;
 
         public TopStoriesAdapter(Activity context, List<PostModel> posts)
         {
@@ -50,20 +50,13 @@ namespace DailySocial.View.Tabs.Adapter
         public override Android.Views.View GetView(int position, Android.Views.View convertView, ViewGroup parent)
         {
             var post = _Posts[position];
-            Android.Views.View view = convertView;
-            if (view == null)
-            {
-                view = _Context.LayoutInflater.Inflate(Resource.Layout.SingleListTopStoriesLayout, parent, false);
-            }
+            Android.Views.View view = convertView ??
+                                      _Context.LayoutInflater.Inflate(Resource.Layout.SingleListTopStoriesLayout, parent, false);
             view.FindViewById<TextView>(Resource.Id.AuthorAndDate).Text = string.Format("{0} | {1}", post.Author.Name, post.LongDateTime);
             view.FindViewById<TextView>(Resource.Id.Title).Text = post.TitleDecode;
             if (post.Attachments.Count != 0)
             {
-                ListUtils.LoadBitmap(post.Attachments[0].Images.Medium.Url,BitmapFactory.DecodeResource(Application.Context.Resources,Resource.Drawable.Icon), view.FindViewById<ImageView>(Resource.Id.ImagePost));
-                //if (post.Attachments[0].Images.Full.Images != null)
-                //{
-                //    view.FindViewById<ImageView>(Resource.Id.ImagePost).SetImageBitmap(post.Attachments[0].Images.Full.Images);
-                //}
+                ListUtils.LoadBitmap(post.Attachments[0].Images.Medium.Url,BitmapFactory.DecodeResource(Application.Context.Resources,Resource.Drawable.defaultimage), view.FindViewById<ImageView>(Resource.Id.ImagePost));
             }
             return view;
         }
